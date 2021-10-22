@@ -1,5 +1,6 @@
 HELP.md
 target/
+out/
 .mvn/wrapper/**
 !**/src/main/**
 !**/src/test/**
