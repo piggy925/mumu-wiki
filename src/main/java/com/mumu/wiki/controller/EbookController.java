@@ -1,7 +1,6 @@
 package com.mumu.wiki.controller;
 
 import com.mumu.wiki.common.ApiRestResponse;
-import com.mumu.wiki.model.pojo.Ebook;
 import com.mumu.wiki.req.EbookReq;
 import com.mumu.wiki.resp.EbookResp;
 import com.mumu.wiki.service.EbookService;
@@ -21,7 +20,7 @@ public class EbookController {
     private EbookService ebookService;
 
     @GetMapping("/list")
-    public ApiRestResponse<List<Ebook>> getEbookList() {
+    public ApiRestResponse<List<EbookResp>> getEbookList() {
         return ApiRestResponse.success(ebookService.getEbookList());
     }
 

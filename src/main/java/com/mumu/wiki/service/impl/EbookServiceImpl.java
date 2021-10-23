@@ -7,11 +7,10 @@ import com.mumu.wiki.model.pojo.Ebook;
 import com.mumu.wiki.req.EbookReq;
 import com.mumu.wiki.resp.EbookResp;
 import com.mumu.wiki.service.EbookService;
-import org.springframework.beans.BeanUtils;
+import com.mumu.wiki.util.CopyUtil;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
-import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -20,8 +19,10 @@ public class EbookServiceImpl implements EbookService {
     private EbookMapper ebookMapper;
 
     @Override
-    public List<Ebook> getEbookList() {
-        return ebookMapper.selectEbookList();
+    public List<EbookResp> getEbookList() {
+        List<Ebook> ebookList = ebookMapper.selectEbookList();
+        List<EbookResp> ebookRespList = CopyUtil.copyList(ebookList, EbookResp.class);
+        return ebookRespList;
     }
 
     @Override
@@ -29,12 +30,7 @@ public class EbookServiceImpl implements EbookService {
         QueryWrapper<Ebook> wrapper = new QueryWrapper<>();
         wrapper.like(StringUtils.isNotBlank(ebookReq.getName()), "name", ebookReq.getName()).or().eq("id", ebookReq.getId());
         List<Ebook> ebookList = ebookMapper.selectList(wrapper);
-        ArrayList<EbookResp> ebookRespList = new ArrayList<>();
-        ebookList.forEach(ebook -> {
-            EbookResp resp = new EbookResp();
-            BeanUtils.copyProperties(ebook, resp);
-            ebookRespList.add(resp);
-        });
+        List<EbookResp> ebookRespList = CopyUtil.copyList(ebookList, EbookResp.class);
         return ebookRespList;
     }
 }
