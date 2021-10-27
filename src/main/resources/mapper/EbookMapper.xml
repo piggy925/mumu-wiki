@@ -152,7 +152,7 @@
     <select id="selectEbookList" resultMap="BaseResultMap">
         SELECT
         <include refid="Base_Column_List"/>
-        FROM ebook;
+        FROM ebook
     </select>
 
     <select id="selectEbookByName" parameterType="string" resultMap="BaseResultMap">

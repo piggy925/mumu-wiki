@@ -2,6 +2,7 @@ package com.mumu.wiki.service.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.toolkit.StringUtils;
+import com.github.pagehelper.PageHelper;
 import com.mumu.wiki.model.mapper.EbookMapper;
 import com.mumu.wiki.model.pojo.Ebook;
 import com.mumu.wiki.req.EbookReq;
@@ -20,6 +21,7 @@ public class EbookServiceImpl implements EbookService {
 
     @Override
     public List<EbookResp> getEbookList() {
+        PageHelper.startPage(1, 2);
         List<Ebook> ebookList = ebookMapper.selectEbookList();
         List<EbookResp> ebookRespList = CopyUtil.copyList(ebookList, EbookResp.class);
         return ebookRespList;
