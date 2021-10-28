@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.annotation.Resource;
+import java.util.List;
 
 @Api(tags = "电子书接口")
 @RestController
@@ -18,6 +19,11 @@ import javax.annotation.Resource;
 public class EbookController {
     @Resource
     private EbookService ebookService;
+
+    @GetMapping("/all")
+    public ApiRestResponse<List<EbookResp>> getAllEbook() {
+        return ApiRestResponse.success(ebookService.getAllEbook());
+    }
 
     @GetMapping("/list")
     public ApiRestResponse<PageResp<EbookResp>> getEbookList(EbookReq req) {

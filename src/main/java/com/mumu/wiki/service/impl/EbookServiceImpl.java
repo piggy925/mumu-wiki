@@ -23,6 +23,13 @@ public class EbookServiceImpl implements EbookService {
     private EbookMapper ebookMapper;
 
     @Override
+    public List<EbookResp> getAllEbook() {
+        List<Ebook> ebookList = ebookMapper.selectEbookList();
+        List<EbookResp> ebookRespList = CopyUtil.copyList(ebookList, EbookResp.class);
+        return ebookRespList;
+    }
+
+    @Override
     public PageResp<EbookResp> getEbookList(EbookReq ebookReq) {
         if (PageUtil.needPage(ebookReq)) {
             PageHelper.startPage(ebookReq.getPageNum(), ebookReq.getPageSize());
@@ -43,9 +50,8 @@ public class EbookServiceImpl implements EbookService {
     }
 
     private PageResp<EbookResp> getPageResp(List<Ebook> ebookList) {
+        PageInfo<Ebook> pageInfo = new PageInfo<>(ebookList);
         List<EbookResp> ebookRespList = CopyUtil.copyList(ebookList, EbookResp.class);
-
-        PageInfo<EbookResp> pageInfo = new PageInfo<>(ebookRespList);
         PageResp<EbookResp> pageResp = new PageResp<>();
         pageResp.setTotal(pageInfo.getTotal());
         pageResp.setList(ebookRespList);
