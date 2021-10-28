@@ -6,7 +6,7 @@ import lombok.Data;
  * 电子书
  */
 @Data
-public class EbookReq {
+public class EbookReq extends PageReq {
     /**
      * id
      */
