@@ -1,7 +1,7 @@
 package com.mumu.wiki.controller;
 
 import com.mumu.wiki.common.ApiRestResponse;
-import com.mumu.wiki.req.EbookReq;
+import com.mumu.wiki.req.EbookQueryReq;
 import com.mumu.wiki.resp.EbookResp;
 import com.mumu.wiki.resp.PageResp;
 import com.mumu.wiki.service.EbookService;
@@ -26,13 +26,13 @@ public class EbookController {
     }
 
     @GetMapping("/list")
-    public ApiRestResponse<PageResp<EbookResp>> getEbookList(EbookReq req) {
+    public ApiRestResponse<PageResp<EbookResp>> getEbookList(EbookQueryReq req) {
         return ApiRestResponse.success(ebookService.getEbookList(req));
     }
 
     @GetMapping("/name")
-    public ApiRestResponse<PageResp<EbookResp>> getEbookByNameOrId(EbookReq ebookReq) {
-        PageResp<EbookResp> ebookList = ebookService.searchByNameOrId(ebookReq);
+    public ApiRestResponse<PageResp<EbookResp>> getEbookByNameOrId(EbookQueryReq ebookQueryReq) {
+        PageResp<EbookResp> ebookList = ebookService.searchByNameOrId(ebookQueryReq);
         return ApiRestResponse.success(ebookList);
     }
 }

@@ -6,7 +6,7 @@ import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import com.mumu.wiki.model.mapper.EbookMapper;
 import com.mumu.wiki.model.pojo.Ebook;
-import com.mumu.wiki.req.EbookReq;
+import com.mumu.wiki.req.EbookQueryReq;
 import com.mumu.wiki.resp.EbookResp;
 import com.mumu.wiki.resp.PageResp;
 import com.mumu.wiki.service.EbookService;
@@ -30,21 +30,21 @@ public class EbookServiceImpl implements EbookService {
     }
 
     @Override
-    public PageResp<EbookResp> getEbookList(EbookReq ebookReq) {
-        if (PageUtil.needPage(ebookReq)) {
-            PageHelper.startPage(ebookReq.getPageNum(), ebookReq.getPageSize());
+    public PageResp<EbookResp> getEbookList(EbookQueryReq ebookQueryReq) {
+        if (PageUtil.needPage(ebookQueryReq)) {
+            PageHelper.startPage(ebookQueryReq.getPageNum(), ebookQueryReq.getPageSize());
         }
         List<Ebook> ebookList = ebookMapper.selectEbookList();
         return getPageResp(ebookList);
     }
 
     @Override
-    public PageResp<EbookResp> searchByNameOrId(EbookReq ebookReq) {
-        if (PageUtil.needPage(ebookReq)) {
-            PageHelper.startPage(ebookReq.getPageNum(), ebookReq.getPageSize());
+    public PageResp<EbookResp> searchByNameOrId(EbookQueryReq ebookQueryReq) {
+        if (PageUtil.needPage(ebookQueryReq)) {
+            PageHelper.startPage(ebookQueryReq.getPageNum(), ebookQueryReq.getPageSize());
         }
         QueryWrapper<Ebook> wrapper = new QueryWrapper<>();
-        wrapper.like(StringUtils.isNotBlank(ebookReq.getName()), "name", ebookReq.getName()).or().eq("id", ebookReq.getId());
+        wrapper.like(StringUtils.isNotBlank(ebookQueryReq.getName()), "name", ebookQueryReq.getName()).or().eq("id", ebookQueryReq.getId());
         List<Ebook> ebookList = ebookMapper.selectList(wrapper);
         return getPageResp(ebookList);
     }
