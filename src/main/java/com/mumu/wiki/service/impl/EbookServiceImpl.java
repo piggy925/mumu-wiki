@@ -7,6 +7,7 @@ import com.github.pagehelper.PageInfo;
 import com.mumu.wiki.model.mapper.EbookMapper;
 import com.mumu.wiki.model.pojo.Ebook;
 import com.mumu.wiki.req.EbookQueryReq;
+import com.mumu.wiki.req.EbookSaveReq;
 import com.mumu.wiki.resp.EbookResp;
 import com.mumu.wiki.resp.PageResp;
 import com.mumu.wiki.service.EbookService;
@@ -47,6 +48,18 @@ public class EbookServiceImpl implements EbookService {
         wrapper.like(StringUtils.isNotBlank(ebookQueryReq.getName()), "name", ebookQueryReq.getName()).or().eq("id", ebookQueryReq.getId());
         List<Ebook> ebookList = ebookMapper.selectList(wrapper);
         return getPageResp(ebookList);
+    }
+
+    @Override
+    public void save(EbookSaveReq req) {
+        Ebook ebook = CopyUtil.copy(req, Ebook.class);
+        if (ebook.getId() != null) {
+            //图书id不为空，执行更新操作
+            ebookMapper.updateByPrimaryKey(ebook);
+        } else {
+            //图书id为空，执行插入操作
+            ebookMapper.insertSelective(ebook);
+        }
     }
 
     private PageResp<EbookResp> getPageResp(List<Ebook> ebookList) {

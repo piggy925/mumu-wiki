@@ -1,6 +1,7 @@
 package com.mumu.wiki.service;
 
 import com.mumu.wiki.req.EbookQueryReq;
+import com.mumu.wiki.req.EbookSaveReq;
 import com.mumu.wiki.resp.EbookResp;
 import com.mumu.wiki.resp.PageResp;
 
@@ -12,4 +13,6 @@ public interface EbookService {
     PageResp<EbookResp> getEbookList(EbookQueryReq req);
 
     PageResp<EbookResp> searchByNameOrId(EbookQueryReq ebookQueryReq);
+
+    void save(EbookSaveReq req);
 }

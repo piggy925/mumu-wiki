@@ -2,13 +2,12 @@ package com.mumu.wiki.controller;
 
 import com.mumu.wiki.common.ApiRestResponse;
 import com.mumu.wiki.req.EbookQueryReq;
+import com.mumu.wiki.req.EbookSaveReq;
 import com.mumu.wiki.resp.EbookResp;
 import com.mumu.wiki.resp.PageResp;
 import com.mumu.wiki.service.EbookService;
 import io.swagger.annotations.Api;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
 import java.util.List;
@@ -23,6 +22,12 @@ public class EbookController {
     @GetMapping("/all")
     public ApiRestResponse<List<EbookResp>> getAllEbook() {
         return ApiRestResponse.success(ebookService.getAllEbook());
+    }
+
+    @PostMapping("/save")
+    public ApiRestResponse save(@RequestBody EbookSaveReq req) {
+        ebookService.save(req);
+        return ApiRestResponse.success();
     }
 
     @GetMapping("/list")

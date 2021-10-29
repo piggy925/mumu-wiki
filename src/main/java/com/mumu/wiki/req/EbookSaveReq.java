@@ -1,9 +1,9 @@
-package com.mumu.wiki.resp;
+package com.mumu.wiki.req;
 
 import lombok.Data;
 
 @Data
-public class EbookResp {
+public class EbookSaveReq {
     /**
      * id
      */
