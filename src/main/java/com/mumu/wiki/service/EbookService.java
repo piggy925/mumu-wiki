@@ -15,4 +15,6 @@ public interface EbookService {
     PageResp<EbookResp> searchByNameOrId(EbookQueryReq ebookQueryReq);
 
     void save(EbookSaveReq req);
+
+    void delete(Long id);
 }

@@ -24,9 +24,16 @@
             <a-button type="primary" @click="edit(record)">
               编辑
             </a-button>
-            <a-button type="danger">
-              删除
-            </a-button>
+            <a-popconfirm
+                title="删除后不可恢复，确定要删除？"
+                ok-text="Yes"
+                cancel-text="No"
+                @confirm="handleDelete(record.id)"
+            >
+              <a-button type="danger">
+                删除
+              </a-button>
+            </a-popconfirm>
           </a-space>
         </template>
       </a-table>
@@ -135,6 +142,23 @@ export default defineComponent({
     };
 
     /**
+     * 删除
+     */
+    const handleDelete = (id: number) => {
+
+
+      axios.delete("/ebook/delete/" + id).then((response) => {
+        const data = response.data;
+        if (data.success) {
+          handleQuery({
+            pageNum: pagination.value.current,
+            pageSize: pagination.value.pageSize
+          });
+        }
+      });
+    };
+
+    /**
      * 新增
      */
     const add = () => {
@@ -202,6 +226,7 @@ export default defineComponent({
 
       edit,
       add,
+      handleDelete,
 
       modalVisible,
       modalLoading

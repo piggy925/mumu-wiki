@@ -62,6 +62,11 @@ public class EbookServiceImpl implements EbookService {
         }
     }
 
+    @Override
+    public void delete(Long id) {
+        ebookMapper.deleteByPrimaryKey(id);
+    }
+
     private PageResp<EbookResp> getPageResp(List<Ebook> ebookList) {
         PageInfo<Ebook> pageInfo = new PageInfo<>(ebookList);
         List<EbookResp> ebookRespList = CopyUtil.copyList(ebookList, EbookResp.class);

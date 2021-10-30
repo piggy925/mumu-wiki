@@ -30,6 +30,12 @@ public class EbookController {
         return ApiRestResponse.success();
     }
 
+    @DeleteMapping("/delete/{id}")
+    public ApiRestResponse delete(@PathVariable("id") Long id) {
+        ebookService.delete(id);
+        return ApiRestResponse.success();
+    }
+
     @GetMapping("/list")
     public ApiRestResponse<PageResp<EbookResp>> getEbookList(EbookQueryReq req) {
         return ApiRestResponse.success(ebookService.getEbookList(req));
