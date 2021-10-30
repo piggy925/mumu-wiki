@@ -11,7 +11,7 @@
             <a-input v-model:value="param.name" placeholder="名称"/>
           </a-form-item>
           <a-form-item>
-            <a-button type="primary" @click="handleSearchByName({pageNum: 1, pageSize: pagination.pageSize})">
+            <a-button type="primary" @click="handleSearchByName()">
               查询
             </a-button>
           </a-form-item>
@@ -32,7 +32,7 @@
           :columns="columns"
           :row-key="record => record.id"
           :data-source="categorys"
-          :pagination="pagination"
+          :pagination="false"
           :loading="loading"
           @change="handleTableChange"
       >
@@ -92,11 +92,6 @@ export default defineComponent({
     const param = ref();
     param.value = {};
     const categorys = ref();
-    const pagination = ref({
-      current: 1,
-      pageSize: 5,
-      total: 0
-    });
     const loading = ref(false);
 
     const columns = [
@@ -135,11 +130,7 @@ export default defineComponent({
         const data = response.data;
         if (data.success) {
           modalVisible.value = false;
-
-          handleQuery({
-            pageNum: pagination.value.current,
-            pageSize: pagination.value.pageSize
-          });
+          handleQuery();
         } else {
           message.error(data.message);
         }
@@ -149,24 +140,19 @@ export default defineComponent({
     /**
      * 通过分类查询
      **/
-    const handleSearchByName = (params: any) => {
+    const handleSearchByName = () => {
       loading.value = true;
       // 如果不清空现有数据，则编辑保存重新加载数据后，再点编辑，则列表显示的还是编辑前的数据
       categorys.value = [];
       axios.get("/category/search", {
         params: {
-          pageNum: params.pageNum,
-          pageSize: params.pageSize,
           name: param.value.name
         }
       }).then((response) => {
         loading.value = false;
         const data = response.data;
         if (data.success) {
-          categorys.value = data.content.list;
-          // 重置分页按钮
-          pagination.value.current = params.pageNum;
-          pagination.value.total = data.content.total;
+          categorys.value = data.content;
         } else {
           message.error(data.message);
         }
@@ -180,10 +166,7 @@ export default defineComponent({
       axios.delete("/category/delete/" + id).then((response) => {
         const data = response.data;
         if (data.success) {
-          handleQuery({
-            pageNum: pagination.value.current,
-            pageSize: pagination.value.pageSize
-          });
+          handleQuery();
         }
       });
     };
@@ -207,65 +190,33 @@ export default defineComponent({
     /**
      * 查询所有
      **/
-    const handleQuery = (params: any) => {
+    const handleQuery = () => {
       loading.value = true;
       // 如果不清空现有数据，则编辑保存重新加载数据后，再点编辑，则列表显示的还是编辑前的数据
       categorys.value = [];
       param.value = {};
-      axios.get("/category/list", {
-        params: {
-          pageNum: params.pageNum,
-          pageSize: params.pageSize
-        }
-      }).then((response) => {
+      axios.get("/category/all").then((response) => {
         loading.value = false;
         const data = response.data;
         if (data.success) {
-          categorys.value = data.content.list;
-          // 重置分页按钮
-          pagination.value.current = params.pageNum;
-          pagination.value.total = data.content.total;
+          categorys.value = data.content;
         } else {
           message.error(data.message);
         }
       });
     };
 
-    /**
-     * 表格点击页码时触发
-     */
-    const handleTableChange = (pagination: any) => {
-      console.log("看看自带的分页参数都有啥：" + pagination);
-      if (param.value.name == null) {
-        handleQuery({
-          pageNum: pagination.current,
-          pageSize: pagination.pageSize
-        });
-      } else {
-        handleSearchByName({
-          pageNum: pagination.current,
-          pageSize: pagination.pageSize,
-          name: param.value.name
-        });
-      }
-    };
-
     onMounted(() => {
-      handleQuery({
-        pageNum: 1,
-        pageSize: pagination.value.pageSize
-      });
+      handleQuery();
     });
 
     return {
       category,
       categorys,
-      pagination,
       columns,
       loading,
       param,
 
-      handleTableChange,
       handleModalOk,
       handleQuery,
 

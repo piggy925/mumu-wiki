@@ -4,7 +4,6 @@ import com.mumu.wiki.common.ApiRestResponse;
 import com.mumu.wiki.req.CategoryQueryReq;
 import com.mumu.wiki.req.CategorySaveReq;
 import com.mumu.wiki.resp.CategoryResp;
-import com.mumu.wiki.resp.PageResp;
 import com.mumu.wiki.service.CategoryService;
 import io.swagger.annotations.Api;
 import org.springframework.web.bind.annotation.*;
@@ -37,14 +36,9 @@ public class CategoryController {
         return ApiRestResponse.success();
     }
 
-    @GetMapping("/list")
-    public ApiRestResponse<PageResp<CategoryResp>> getCategoryList(@Valid CategoryQueryReq req) {
-        return ApiRestResponse.success(categoryService.getCategoryList(req));
-    }
-
     @GetMapping("/search")
-    public ApiRestResponse<PageResp<CategoryResp>> getCategoryByName(CategoryQueryReq categoryQueryReq) {
-        PageResp<CategoryResp> categoryList = categoryService.searchByName(categoryQueryReq);
+    public ApiRestResponse<List<CategoryResp>> getCategoryByName(CategoryQueryReq categoryQueryReq) {
+        List<CategoryResp> categoryList = categoryService.searchByName(categoryQueryReq);
         return ApiRestResponse.success(categoryList);
     }
 }

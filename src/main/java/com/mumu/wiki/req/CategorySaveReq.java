@@ -9,7 +9,7 @@ import javax.validation.constraints.NotNull;
  * 电子书
  */
 @Data
-public class CategorySaveReq extends PageReq {
+public class CategorySaveReq {
     /**
      * id
      */
