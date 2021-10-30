@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.mumu.wiki.model.mapper.CategoryMapper">
+    <resultMap id="BaseResultMap" type="com.mumu.wiki.model.pojo.Category">
+        <!--@mbg.generated-->
+        <!--@Table category-->
+        <id column="id" jdbcType="BIGINT" property="id"/>
+        <result column="parent" jdbcType="BIGINT" property="parent"/>
+        <result column="name" jdbcType="VARCHAR" property="name"/>
+        <result column="sort" jdbcType="INTEGER" property="sort"/>
+    </resultMap>
+    <sql id="Base_Column_List">
+        <!--@mbg.generated-->
+        id, parent, `name`, sort
+    </sql>
+    <select id="selectByPrimaryKey" parameterType="java.lang.Long" resultMap="BaseResultMap">
+        <!--@mbg.generated-->
+        SELECT
+        <include refid="Base_Column_List"/>
+        FROM category
+        WHERE id = #{id,jdbcType=BIGINT}
+    </select>
+    <delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
+        <!--@mbg.generated-->
+        DELETE FROM category
+        WHERE id = #{id,jdbcType=BIGINT}
+    </delete>
+    <insert id="insert" parameterType="com.mumu.wiki.model.pojo.Category">
+        <!--@mbg.generated-->
+        INSERT INTO category (id, parent, `name`,
+        sort)
+        VALUES (#{id,jdbcType=BIGINT}, #{parent,jdbcType=BIGINT}, #{name,jdbcType=VARCHAR},
+        #{sort,jdbcType=INTEGER})
+    </insert>
+    <insert id="insertSelective" parameterType="com.mumu.wiki.model.pojo.Category">
+        <!--@mbg.generated-->
+        INSERT INTO category
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id != null">
+                id,
+            </if>
+            <if test="parent != null">
+                parent,
+            </if>
+            <if test="name != null">
+                `name`,
+            </if>
+            <if test="sort != null">
+                sort,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="id != null">
+                #{id,jdbcType=BIGINT},
+            </if>
+            <if test="parent != null">
+                #{parent,jdbcType=BIGINT},
+            </if>
+            <if test="name != null">
+                #{name,jdbcType=VARCHAR},
+            </if>
+            <if test="sort != null">
+                #{sort,jdbcType=INTEGER},
+            </if>
+        </trim>
+    </insert>
+    <update id="updateByPrimaryKeySelective" parameterType="com.mumu.wiki.model.pojo.Category">
+        <!--@mbg.generated-->
+        UPDATE category
+        <set>
+            <if test="parent != null">
+                parent = #{parent,jdbcType=BIGINT},
+            </if>
+            <if test="name != null">
+                `name` = #{name,jdbcType=VARCHAR},
+            </if>
+            <if test="sort != null">
+                sort = #{sort,jdbcType=INTEGER},
+            </if>
+        </set>
+        WHERE id = #{id,jdbcType=BIGINT}
+    </update>
+    <update id="updateByPrimaryKey" parameterType="com.mumu.wiki.model.pojo.Category">
+        <!--@mbg.generated-->
+        UPDATE category
+        SET parent = #{parent,jdbcType=BIGINT},
+        `name` = #{name,jdbcType=VARCHAR},
+        sort = #{sort,jdbcType=INTEGER}
+        WHERE id = #{id,jdbcType=BIGINT}
+    </update>
+
+    <select id="selectCategoryList" resultMap="BaseResultMap">
+        SELECT
+        <include refid="Base_Column_List"/>
+        FROM category
+    </select>
+</mapper>
