@@ -55,7 +55,7 @@ public class EbookServiceImpl implements EbookService {
         Ebook ebook = CopyUtil.copy(req, Ebook.class);
         if (ebook.getId() != null) {
             //图书id不为空，执行更新操作
-            ebookMapper.updateByPrimaryKey(ebook);
+            ebookMapper.updateByPrimaryKeySelective(ebook);
         } else {
             //图书id为空，执行插入操作
             ebookMapper.insertSelective(ebook);
