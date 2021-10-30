@@ -2,6 +2,8 @@ package com.mumu.wiki.req;
 
 import lombok.Data;
 
+import javax.validation.constraints.NotBlank;
+
 @Data
 public class EbookSaveReq {
     /**
@@ -12,6 +14,7 @@ public class EbookSaveReq {
     /**
      * 名称
      */
+    @NotBlank(message = "【名称】不能为空")
     private String name;
 
     /**

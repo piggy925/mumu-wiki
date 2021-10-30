@@ -26,7 +26,7 @@ public class EbookController {
     }
 
     @PostMapping("/save")
-    public ApiRestResponse save(@RequestBody EbookSaveReq req) {
+    public ApiRestResponse save(@Valid @RequestBody EbookSaveReq req) {
         ebookService.save(req);
         return ApiRestResponse.success();
     }
