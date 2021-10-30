@@ -10,6 +10,7 @@ import io.swagger.annotations.Api;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
+import javax.validation.Valid;
 import java.util.List;
 
 @Api(tags = "电子书接口")
@@ -37,7 +38,7 @@ public class EbookController {
     }
 
     @GetMapping("/list")
-    public ApiRestResponse<PageResp<EbookResp>> getEbookList(EbookQueryReq req) {
+    public ApiRestResponse<PageResp<EbookResp>> getEbookList(@Valid EbookQueryReq req) {
         return ApiRestResponse.success(ebookService.getEbookList(req));
     }
 
