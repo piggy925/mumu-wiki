@@ -42,9 +42,9 @@ public class EbookController {
         return ApiRestResponse.success(ebookService.getEbookList(req));
     }
 
-    @GetMapping("/name")
-    public ApiRestResponse<PageResp<EbookResp>> getEbookByNameOrId(EbookQueryReq ebookQueryReq) {
-        PageResp<EbookResp> ebookList = ebookService.searchByNameOrId(ebookQueryReq);
+    @GetMapping("/search")
+    public ApiRestResponse<PageResp<EbookResp>> getEbookByName(EbookQueryReq ebookQueryReq) {
+        PageResp<EbookResp> ebookList = ebookService.searchByName(ebookQueryReq);
         return ApiRestResponse.success(ebookList);
     }
 }

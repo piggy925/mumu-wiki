@@ -1,7 +1,6 @@
 package com.mumu.wiki.service.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
-import com.baomidou.mybatisplus.core.toolkit.StringUtils;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import com.mumu.wiki.model.mapper.EbookMapper;
@@ -40,12 +39,12 @@ public class EbookServiceImpl implements EbookService {
     }
 
     @Override
-    public PageResp<EbookResp> searchByNameOrId(EbookQueryReq ebookQueryReq) {
+    public PageResp<EbookResp> searchByName(EbookQueryReq ebookQueryReq) {
         if (PageUtil.needPage(ebookQueryReq)) {
             PageHelper.startPage(ebookQueryReq.getPageNum(), ebookQueryReq.getPageSize());
         }
         QueryWrapper<Ebook> wrapper = new QueryWrapper<>();
-        wrapper.like(StringUtils.isNotBlank(ebookQueryReq.getName()), "name", ebookQueryReq.getName()).or().eq("id", ebookQueryReq.getId());
+        wrapper.like("name", ebookQueryReq.getName());
         List<Ebook> ebookList = ebookMapper.selectList(wrapper);
         return getPageResp(ebookList);
     }

@@ -4,10 +4,30 @@
         :style="{ background: '#fff', padding: '24px', margin: 0, minHeight: '280px' }"
     >
       <p>
-        <a-button type="primary" @click="add" size="large">
-          新增
-        </a-button>
+        <a-form
+            layout="inline" :model="param"
+        >
+          <a-form-item>
+            <a-input v-model:value="param.name" placeholder="名称"/>
+          </a-form-item>
+          <a-form-item>
+            <a-button type="primary" @click="handleSearchByName({pageNum: 1, pageSize: pagination.pageSize})">
+              查询
+            </a-button>
+          </a-form-item>
+          <a-form-item>
+            <a-button type="primary" @click="add">
+              新增
+            </a-button>
+          </a-form-item>
+          <a-form-item>
+            <a-button type="primary" @click="handleQuery">
+              显示所有
+            </a-button>
+          </a-form-item>
+        </a-form>
       </p>
+
       <a-table
           :columns="columns"
           :row-key="record => record.id"
@@ -74,10 +94,12 @@ import {message} from 'ant-design-vue';
 export default defineComponent({
   name: 'AdminEbook',
   setup() {
+    const param = ref();
+    param.value = {};
     const ebooks = ref();
     const pagination = ref({
       current: 1,
-      pageSize: 4,
+      pageSize: 5,
       total: 0
     });
     const loading = ref(false);
@@ -130,7 +152,7 @@ export default defineComponent({
       //向后台请求保存图书
       axios.post("/ebook/save", ebook.value).then((response) => {
         modalLoading.value = false;
-        
+
         const data = response.data;
         if (data.success) {
           modalVisible.value = false;
@@ -139,6 +161,33 @@ export default defineComponent({
             pageNum: pagination.value.current,
             pageSize: pagination.value.pageSize
           });
+        } else {
+          message.error(data.message);
+        }
+      });
+    };
+
+    /**
+     * 通过书名查询
+     **/
+    const handleSearchByName = (params: any) => {
+      loading.value = true;
+      // 如果不清空现有数据，则编辑保存重新加载数据后，再点编辑，则列表显示的还是编辑前的数据
+      ebooks.value = [];
+      axios.get("/ebook/search", {
+        params: {
+          pageNum: params.pageNum,
+          pageSize: params.pageSize,
+          name: param.value.name
+        }
+      }).then((response) => {
+        loading.value = false;
+        const data = response.data;
+        if (data.success) {
+          ebooks.value = data.content.list;
+          // 重置分页按钮
+          pagination.value.current = params.pageNum;
+          pagination.value.total = data.content.total;
         } else {
           message.error(data.message);
         }
@@ -177,12 +226,13 @@ export default defineComponent({
     };
 
     /**
-     * 数据查询
+     * 查询所有
      **/
     const handleQuery = (params: any) => {
       loading.value = true;
       // 如果不清空现有数据，则编辑保存重新加载数据后，再点编辑，则列表显示的还是编辑前的数据
       ebooks.value = [];
+      param.value = {};
       axios.get("/ebook/list", {
         params: {
           pageNum: params.pageNum,
@@ -207,10 +257,18 @@ export default defineComponent({
      */
     const handleTableChange = (pagination: any) => {
       console.log("看看自带的分页参数都有啥：" + pagination);
-      handleQuery({
-        pageNum: pagination.current,
-        pageSize: pagination.pageSize
-      });
+      if (param.value.name == null) {
+        handleQuery({
+          pageNum: pagination.current,
+          pageSize: pagination.pageSize
+        });
+      } else {
+        handleSearchByName({
+          pageNum: pagination.current,
+          pageSize: pagination.pageSize,
+          name: param.value.name
+        });
+      }
     };
 
     onMounted(() => {
@@ -226,13 +284,16 @@ export default defineComponent({
       pagination,
       columns,
       loading,
+      param,
 
       handleTableChange,
       handleModalOk,
+      handleQuery,
 
       edit,
       add,
       handleDelete,
+      handleSearchByName,
 
       modalVisible,
       modalLoading

@@ -12,7 +12,7 @@ public interface EbookService {
 
     PageResp<EbookResp> getEbookList(EbookQueryReq req);
 
-    PageResp<EbookResp> searchByNameOrId(EbookQueryReq ebookQueryReq);
+    PageResp<EbookResp> searchByName(EbookQueryReq ebookQueryReq);
 
     void save(EbookSaveReq req);
 
