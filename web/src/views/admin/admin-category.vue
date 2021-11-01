@@ -31,7 +31,7 @@
       <a-table
           :columns="columns"
           :row-key="record => record.id"
-          :data-source="categorys"
+          :data-source="categoryTree"
           :pagination="false"
           :loading="loading"
           @change="handleTableChange"
@@ -118,6 +118,7 @@ export default defineComponent({
     ];
 
     // -------- 表单 ---------
+    const categoryTree = ref();
     const category = ref();
     const modalVisible = ref(false);
     const modalLoading = ref(false);
@@ -200,6 +201,8 @@ export default defineComponent({
         const data = response.data;
         if (data.success) {
           categorys.value = data.content;
+          categoryTree.value = [];
+          categoryTree.value = Tool.array2Tree(categorys.value, 0);
         } else {
           message.error(data.message);
         }
@@ -211,8 +214,8 @@ export default defineComponent({
     });
 
     return {
+      categoryTree,
       category,
-      categorys,
       columns,
       loading,
       param,
