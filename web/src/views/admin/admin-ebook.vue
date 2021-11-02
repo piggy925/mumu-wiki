@@ -73,12 +73,13 @@
       <a-form-item label="名称">
         <a-input v-model:value="ebook.name"/>
       </a-form-item>
-      <a-form-item label="分类1">
-        <a-input v-model:value="ebook.category1Id"/>
+
+      <a-form-item label="分类">
+        <a-cascader v-model:value="categoryIds"
+                    :field-names="{label: 'name', value: 'id', children: 'children'}"
+                    :options="categoryTree" placeholder="请选择"/>
       </a-form-item>
-      <a-form-item label="分类2">
-        <a-input v-model:value="ebook.category2Id"/>
-      </a-form-item>
+
       <a-form-item label="描述">
         <a-input v-model:value="ebook.description" type="textarea"/>
       </a-form-item>
@@ -145,11 +146,15 @@ export default defineComponent({
     ];
 
     // -------- 表单 ---------
+    const categoryTree = ref();
+    const categoryIds = ref();
     const ebook = ref();
     const modalVisible = ref(false);
     const modalLoading = ref(false);
     const handleModalOk = () => {
       modalLoading.value = true;
+      ebook.value.category1Id = categoryIds.value[0];
+      ebook.value.category2Id = categoryIds.value[1];
       //向后台请求保存图书
       axios.post("/ebook/save", ebook.value).then((response) => {
         modalLoading.value = false;
@@ -224,6 +229,26 @@ export default defineComponent({
     const edit = (record: any) => {
       modalVisible.value = true;
       ebook.value = Tool.copy(record);
+      categoryIds.value = [ebook.value.category1Id, ebook.value.category2Id];
+    };
+
+    /**
+     * 查询所有分类
+     **/
+    const handleQueryCategory = () => {
+      loading.value = true;
+      // 如果不清空现有数据，则编辑保存重新加载数据后，再点编辑，则列表显示的还是编辑前的数据
+      axios.get("/category/all").then((response) => {
+        loading.value = false;
+        const data = response.data;
+        if (data.success) {
+          const categorys = data.content;
+          categoryTree.value = [];
+          categoryTree.value = Tool.array2Tree(categorys, 0);
+        } else {
+          message.error(data.message);
+        }
+      });
     };
 
     /**
@@ -273,6 +298,7 @@ export default defineComponent({
     };
 
     onMounted(() => {
+      handleQueryCategory();
       handleQuery({
         pageNum: 1,
         pageSize: pagination.value.pageSize
@@ -286,10 +312,13 @@ export default defineComponent({
       columns,
       loading,
       param,
+      categoryTree,
+      categoryIds,
 
       handleTableChange,
       handleModalOk,
       handleQuery,
+      handleQueryCategory,
 
       edit,
       add,
