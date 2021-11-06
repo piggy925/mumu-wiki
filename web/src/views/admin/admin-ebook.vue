@@ -247,6 +247,12 @@ export default defineComponent({
           categorys = data.content;
           categoryTree.value = [];
           categoryTree.value = Tool.array2Tree(categorys, 0);
+
+          //加载完所有分类之后再去查询电子书,否则如果分类树加载太慢，查询电子书时会报错
+          handleQuery({
+            pageNum: 1,
+            pageSize: pagination.value.pageSize
+          });
         } else {
           message.error(data.message);
         }
@@ -315,10 +321,6 @@ export default defineComponent({
 
     onMounted(() => {
       handleQueryCategory();
-      handleQuery({
-        pageNum: 1,
-        pageSize: pagination.value.pageSize
-      });
     });
 
     return {
