@@ -13,6 +13,7 @@ import com.mumu.wiki.service.EbookService;
 import com.mumu.wiki.util.CopyUtil;
 import com.mumu.wiki.util.PageUtil;
 import org.springframework.stereotype.Service;
+import org.springframework.util.ObjectUtils;
 
 import javax.annotation.Resource;
 import java.util.List;
@@ -34,7 +35,12 @@ public class EbookServiceImpl implements EbookService {
         if (PageUtil.needPage(ebookQueryReq)) {
             PageHelper.startPage(ebookQueryReq.getPageNum(), ebookQueryReq.getPageSize());
         }
-        List<Ebook> ebookList = ebookMapper.selectEbookList();
+        Long category2Id = ebookQueryReq.getCategory2Id();
+        QueryWrapper<Ebook> wrapper = new QueryWrapper<>();
+        if (!ObjectUtils.isEmpty(category2Id)) {
+            wrapper.eq("category2_Id", category2Id);
+        }
+        List<Ebook> ebookList = ebookMapper.selectList(wrapper);
         return getPageResp(ebookList);
     }
 

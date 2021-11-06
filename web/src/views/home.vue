@@ -4,12 +4,11 @@
       <a-menu
           mode="inline"
           :style="{ height: '100%', borderRight: 0 }"
+          @click="handleClick"
       >
         <a-menu-item key="welcome">
-          <router-link :to="'/'">
-            <MailOutlined/>
-            <span>欢迎</span>
-          </router-link>
+          <MailOutlined/>
+          <span>欢迎</span>
         </a-menu-item>
         <a-sub-menu v-for="item in categoryTree" :key="item.id">
           <template v-slot:title>
@@ -26,7 +25,11 @@
     <a-layout-content
         :style="{ background: '#fff', padding: '24px', margin: 0, minHeight: '280px' }"
     >
-      <a-list item-layout="vertical" :grid="{ gutter: 16, column: 3 }" size="large" :pagination="pagination"
+      <div class="welcome" v-show="isShowWelcome">
+        <h1>欢迎使用MuMu Wiki</h1>
+      </div>
+      <a-list v-show="!isShowWelcome" item-layout="vertical" :grid="{ gutter: 16, column: 3 }" size="large"
+              :pagination="pagination"
               :data-source="ebooks">
         <template #renderItem="{ item }">
           <a-list-item key="item.name">
@@ -68,6 +71,17 @@ export default defineComponent({
   setup() {
     const ebooks = ref();
     const categoryTree = ref();
+    const isShowWelcome = ref(true);
+
+    const handleClick = (value: any) => {
+      console.log(value);
+      if (value.key === "welcome") {
+        isShowWelcome.value = true;
+      } else {
+        isShowWelcome.value = false;
+        getEbookList(value.key);
+      }
+    };
 
     let categorys: any;
     /**
@@ -87,12 +101,26 @@ export default defineComponent({
       });
     };
 
+    const getEbookList = (id: number) => {
+      axios.get('/ebook/list', {
+        params: {
+          pageNum: 1,
+          pageSize: 1000,
+          category2Id: id
+        }
+      }).then((resp) => {
+        const data = resp.data;
+        ebooks.value = data.content.list;
+      })
+    };
+
     onMounted(() => {
       handleQueryCategory();
-      axios.get('/ebook/all').then((resp) => {
-        const data = resp.data;
-        ebooks.value = data.content;
-      })
+      // 初始显示欢迎页面
+      // axios.get('/ebook/all').then((resp) => {
+      //   const data = resp.data;
+      //   ebooks.value = data.content;
+      // })
     })
 
 
@@ -106,8 +134,10 @@ export default defineComponent({
       ebooks,
       actions,
       categoryTree,
+      isShowWelcome,
 
-      handleQueryCategory
+      handleQueryCategory,
+      handleClick
     }
   }
 });
