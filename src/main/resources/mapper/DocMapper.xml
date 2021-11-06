@@ -1,0 +1,126 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.mumu.wiki.model.mapper.DocMapper">
+    <resultMap id="BaseResultMap" type="com.mumu.wiki.model.pojo.Doc">
+        <!--@mbg.generated-->
+        <!--@Table doc-->
+        <id column="id" jdbcType="BIGINT" property="id"/>
+        <result column="ebook_id" jdbcType="BIGINT" property="ebookId"/>
+        <result column="parent" jdbcType="BIGINT" property="parent"/>
+        <result column="name" jdbcType="VARCHAR" property="name"/>
+        <result column="sort" jdbcType="INTEGER" property="sort"/>
+        <result column="view_count" jdbcType="INTEGER" property="viewCount"/>
+        <result column="vote_count" jdbcType="INTEGER" property="voteCount"/>
+    </resultMap>
+    <sql id="Base_Column_List">
+        <!--@mbg.generated-->
+        id, ebook_id, parent, `name`, sort, view_count, vote_count
+    </sql>
+    <select id="selectByPrimaryKey" parameterType="java.lang.Long" resultMap="BaseResultMap">
+        <!--@mbg.generated-->
+        SELECT
+        <include refid="Base_Column_List"/>
+        FROM doc
+        WHERE id = #{id,jdbcType=BIGINT}
+    </select>
+    <delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
+        <!--@mbg.generated-->
+        DELETE FROM doc
+        WHERE id = #{id,jdbcType=BIGINT}
+    </delete>
+    <insert id="insert" parameterType="com.mumu.wiki.model.pojo.Doc">
+        <!--@mbg.generated-->
+        INSERT INTO doc (id, ebook_id, parent,
+        `name`, sort, view_count,
+        vote_count)
+        VALUES (#{id,jdbcType=BIGINT}, #{ebookId,jdbcType=BIGINT}, #{parent,jdbcType=BIGINT},
+        #{name,jdbcType=VARCHAR}, #{sort,jdbcType=INTEGER}, #{viewCount,jdbcType=INTEGER},
+        #{voteCount,jdbcType=INTEGER})
+    </insert>
+    <insert id="insertSelective" parameterType="com.mumu.wiki.model.pojo.Doc">
+        <!--@mbg.generated-->
+        INSERT INTO doc
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id != null">
+                id,
+            </if>
+            <if test="ebookId != null">
+                ebook_id,
+            </if>
+            <if test="parent != null">
+                parent,
+            </if>
+            <if test="name != null">
+                `name`,
+            </if>
+            <if test="sort != null">
+                sort,
+            </if>
+            <if test="viewCount != null">
+                view_count,
+            </if>
+            <if test="voteCount != null">
+                vote_count,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="id != null">
+                #{id,jdbcType=BIGINT},
+            </if>
+            <if test="ebookId != null">
+                #{ebookId,jdbcType=BIGINT},
+            </if>
+            <if test="parent != null">
+                #{parent,jdbcType=BIGINT},
+            </if>
+            <if test="name != null">
+                #{name,jdbcType=VARCHAR},
+            </if>
+            <if test="sort != null">
+                #{sort,jdbcType=INTEGER},
+            </if>
+            <if test="viewCount != null">
+                #{viewCount,jdbcType=INTEGER},
+            </if>
+            <if test="voteCount != null">
+                #{voteCount,jdbcType=INTEGER},
+            </if>
+        </trim>
+    </insert>
+    <update id="updateByPrimaryKeySelective" parameterType="com.mumu.wiki.model.pojo.Doc">
+        <!--@mbg.generated-->
+        UPDATE doc
+        <set>
+            <if test="ebookId != null">
+                ebook_id = #{ebookId,jdbcType=BIGINT},
+            </if>
+            <if test="parent != null">
+                parent = #{parent,jdbcType=BIGINT},
+            </if>
+            <if test="name != null">
+                `name` = #{name,jdbcType=VARCHAR},
+            </if>
+            <if test="sort != null">
+                sort = #{sort,jdbcType=INTEGER},
+            </if>
+            <if test="viewCount != null">
+                view_count = #{viewCount,jdbcType=INTEGER},
+            </if>
+            <if test="voteCount != null">
+                vote_count = #{voteCount,jdbcType=INTEGER},
+            </if>
+        </set>
+        WHERE id = #{id,jdbcType=BIGINT}
+    </update>
+    <update id="updateByPrimaryKey" parameterType="com.mumu.wiki.model.pojo.Doc">
+        <!--@mbg.generated-->
+        UPDATE doc
+        SET ebook_id = #{ebookId,jdbcType=BIGINT},
+        parent = #{parent,jdbcType=BIGINT},
+        `name` = #{name,jdbcType=VARCHAR},
+        sort = #{sort,jdbcType=INTEGER},
+        view_count = #{viewCount,jdbcType=INTEGER},
+        vote_count = #{voteCount,jdbcType=INTEGER}
+        WHERE id = #{id,jdbcType=BIGINT}
+    </update>
+</mapper>
