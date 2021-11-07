@@ -71,18 +71,17 @@
         <a-input v-model:value="doc.name"/>
       </a-form-item>
       <a-form-item label="父文档">
-        <a-select
-            ref="select"
+        <a-tree-select
             v-model:value="doc.parent"
+            style="width: 100%"
+            :dropdown-style="{ maxHeight: '400px', overflow: 'auto' }"
+            :tree-data="docTreeSelectData"
+            placeholder="请选择父文档"
+            tree-default-expand-all
+            :replaceFields="{ title:'name', key:'id', value: 'id' }"
         >
-          <a-select-option value="0">
-            无
-          </a-select-option>
 
-          <a-select-option v-for="c in docTree" :key="c.id" :value="c.id" :disabled="doc.id === c.id">
-            {{ c.name }}
-          </a-select-option>
-        </a-select>
+        </a-tree-select>
       </a-form-item>
       <a-form-item label="顺序">
         <a-input v-model:value="doc.sort"/>
@@ -129,6 +128,8 @@ export default defineComponent({
     ];
 
     // -------- 表单 ---------
+    const docTreeSelectData = ref();
+    docTreeSelectData.value = [];
     const docTree = ref();
     const doc = ref();
     const modalVisible = ref(false);
@@ -184,11 +185,38 @@ export default defineComponent({
     };
 
     /**
+     * 将指定节点与其子孙节点全部设置为disabled
+     **/
+    const setDisabled = (docTreeSelectData: any, id: any) => {
+      for (let i = 0; i < docTreeSelectData.length; i++) {
+        const node = docTreeSelectData[i];
+        if (node.id === id) {
+          node.disabled = true;
+          const children = node.children;
+          if (Tool.isNotEmpty(children)) {
+            for (let j = 0; j < children.length; j++) {
+              setDisabled(children, children[j].id);
+            }
+          }
+        } else {
+          const children = node.children;
+          if (Tool.isNotEmpty(children)) {
+            setDisabled(children, id);
+          }
+        }
+      }
+    };
+
+    /**
      * 新增
      */
     const add = () => {
       modalVisible.value = true;
       doc.value = {};
+
+      docTreeSelectData.value = Tool.copy(docTree.value);
+      //为树形选择增加'无'选项，用于新增一级节点
+      docTreeSelectData.value.unshift({id: 0, name: '无'});
     };
 
     /**
@@ -197,6 +225,11 @@ export default defineComponent({
     const edit = (record: any) => {
       modalVisible.value = true;
       doc.value = Tool.copy(record);
+
+      docTreeSelectData.value = Tool.copy(docTree.value);
+      setDisabled(docTreeSelectData.value, record.id);
+      //为树形选择增加'无'选项，用于新增一级节点
+      docTreeSelectData.value.unshift({id: 0, name: '无'});
     };
 
     /**
@@ -205,7 +238,7 @@ export default defineComponent({
     const handleQuery = () => {
       loading.value = true;
       // 如果不清空现有数据，则编辑保存重新加载数据后，再点编辑，则列表显示的还是编辑前的数据
-      docs.value = [];
+      docTree.value = [];
       param.value = {};
       axios.get("/doc/all").then((response) => {
         loading.value = false;
@@ -225,6 +258,7 @@ export default defineComponent({
     });
 
     return {
+      docTreeSelectData,
       docTree,
       doc,
       columns,
