@@ -86,6 +86,9 @@
       <a-form-item label="顺序">
         <a-input v-model:value="doc.sort"/>
       </a-form-item>
+      <a-form-item label="内容">
+        <div id="content"></div>
+      </a-form-item>
     </a-form>
   </a-modal>
 </template>
@@ -96,6 +99,7 @@ import axios from 'axios';
 import {message} from 'ant-design-vue';
 import {Tool} from "@/util/tool";
 import {useRoute} from "vue-router";
+import E from 'wangeditor';
 
 export default defineComponent({
   name: 'AdminCategory',
@@ -130,6 +134,7 @@ export default defineComponent({
     ];
 
     // -------- 表单 ---------
+    const editor = new E('#content')
     const docTreeSelectData = ref();
     docTreeSelectData.value = [];
     const docTree = ref();
@@ -247,6 +252,10 @@ export default defineComponent({
       docTreeSelectData.value = Tool.copy(docTree.value);
       //为树形选择增加'无'选项，用于新增一级节点
       docTreeSelectData.value.unshift({id: 0, name: '无'});
+
+      setTimeout(function () {
+        editor.create();
+      }, 100);
     };
 
     /**
@@ -260,6 +269,10 @@ export default defineComponent({
       setDisabled(docTreeSelectData.value, record.id);
       //为树形选择增加'无'选项，用于新增一级节点
       docTreeSelectData.value.unshift({id: 0, name: '无'});
+
+      setTimeout(function () {
+        editor.create();
+      }, 100);
     };
 
     /**
