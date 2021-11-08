@@ -6,10 +6,12 @@ import com.mumu.wiki.req.DocSaveReq;
 import com.mumu.wiki.resp.DocResp;
 import com.mumu.wiki.service.DocService;
 import io.swagger.annotations.Api;
+import org.springframework.util.ObjectUtils;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
 import javax.validation.Valid;
+import java.util.Arrays;
 import java.util.List;
 
 @Api(tags = "文档接口")
@@ -30,9 +32,12 @@ public class DocController {
         return ApiRestResponse.success();
     }
 
-    @DeleteMapping("/delete/{id}")
-    public ApiRestResponse delete(@PathVariable("id") Long id) {
-        docService.delete(id);
+    @DeleteMapping("/delete/{idsStr}")
+    public ApiRestResponse delete(@PathVariable("idsStr") String idsStr) {
+        if (!ObjectUtils.isEmpty(idsStr)) {
+            List<String> list = Arrays.asList(idsStr.split(","));
+            docService.delete(list);
+        }
         return ApiRestResponse.success();
     }
 

@@ -14,4 +14,6 @@ public interface DocService {
     void save(DocSaveReq req);
 
     void delete(Long id);
+
+    void delete(List<String> ids);
 }

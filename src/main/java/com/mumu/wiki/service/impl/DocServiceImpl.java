@@ -49,6 +49,13 @@ public class DocServiceImpl implements DocService {
         docMapper.deleteByPrimaryKey(id);
     }
 
+    @Override
+    public void delete(List<String> ids) {
+        QueryWrapper<Doc> wrapper = new QueryWrapper<>();
+        wrapper.in("id", ids);
+        docMapper.delete(wrapper);
+    }
+
     private List<DocResp> getDocResp(List<Doc> docList) {
         List<DocResp> docRespList = CopyUtil.copyList(docList, DocResp.class);
         return docRespList;
