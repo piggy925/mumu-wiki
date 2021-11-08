@@ -95,10 +95,12 @@ import {defineComponent, onMounted, ref} from 'vue';
 import axios from 'axios';
 import {message} from 'ant-design-vue';
 import {Tool} from "@/util/tool";
+import {useRoute} from "vue-router";
 
 export default defineComponent({
   name: 'AdminCategory',
   setup() {
+    const route = useRoute();
     const param = ref();
     param.value = {};
     const docs = ref();
@@ -212,7 +214,9 @@ export default defineComponent({
      */
     const add = () => {
       modalVisible.value = true;
-      doc.value = {};
+      doc.value = {
+        ebookId: route.query.ebookId
+      };
 
       docTreeSelectData.value = Tool.copy(docTree.value);
       //为树形选择增加'无'选项，用于新增一级节点
