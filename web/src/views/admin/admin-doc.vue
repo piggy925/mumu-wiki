@@ -26,6 +26,7 @@
           </p>
 
           <a-table
+              v-if="docTree.length > 0"
               :columns="columns"
               :row-key="record => record.id"
               :data-source="docTree"
@@ -34,8 +35,8 @@
               size="small"
               :defaultExpandAllRows="true"
           >
-            <template #cover="{ text: cover }">
-              <img v-if="cover" :src="cover" alt="avatar"/>
+            <template #name="{ text, record }">
+              {{record.sort}} {{text}}
             </template>
             <template v-slot:action="{ text, record }">
               <a-space size="small">
@@ -57,7 +58,16 @@
           </a-table>
         </a-col>
         <a-col :span="16">
-          <a-form :model="doc">
+          <p>
+            <a-form layout="inline" :model="param">
+              <a-form-item>
+                <a-button type="primary" @click="handleSave">
+                  保存
+                </a-button>
+              </a-form-item>
+            </a-form>
+          </p>
+          <a-form :model="doc" layout="vertical"> 
             <a-form-item>
               <a-input v-model:value="doc.name" placeholder="名称"/>
             </a-form-item>
@@ -109,16 +119,7 @@ export default defineComponent({
         title: '名称',
         key: 'name',
         dataIndex: 'name',
-      },
-      {
-        title: '父文档',
-        key: 'parent',
-        dataIndex: 'parent'
-      },
-      {
-        title: '排序',
-        key: 'sort',
-        dataIndex: 'sort'
+        slots: {customRender: 'name'}
       },
       {
         title: '操作',
@@ -129,16 +130,18 @@ export default defineComponent({
 
     // -------- 表单 ---------
     const editor = new E('#content')
+    editor.config.zIndex = 0;
     const docTreeSelectData = ref();
     docTreeSelectData.value = [];
     const docTree = ref();
+    docTree.value = [];
     const doc = ref();
     doc.value = {
       ebookId: route.query.ebookId
     };
     const modalVisible = ref(false);
     const modalLoading = ref(false);
-    const handleModalOk = () => {
+    const handleSave = () => {
       modalLoading.value = true;
       //向后台请求保存文档
       axios.post("/doc/save", doc.value).then((response) => {
@@ -249,10 +252,6 @@ export default defineComponent({
       docTreeSelectData.value = Tool.copy(docTree.value);
       //为树形选择增加'无'选项，用于新增一级节点
       docTreeSelectData.value.unshift({id: 0, name: '无'});
-
-      setTimeout(function () {
-        editor.create();
-      }, 100);
     };
 
     /**
@@ -265,11 +264,7 @@ export default defineComponent({
       docTreeSelectData.value = Tool.copy(docTree.value);
       setDisabled(docTreeSelectData.value, record.id);
       //为树形选择增加'无'选项，用于新增一级节点
-      docTreeSelectData.value.unshift({id: 0, name: '无'});
-
-      setTimeout(function () {
-        editor.create();
-      }, 100);
+      docTreeSelectData.value.unshift({id: 0, name: '无'}); 
     };
 
     /**
@@ -306,7 +301,7 @@ export default defineComponent({
       loading,
       param,
 
-      handleModalOk,
+      handleSave,
       handleQuery,
 
       edit,
