@@ -46,4 +46,10 @@ public class DocController {
         List<DocResp> docList = docService.searchByName(docQueryReq);
         return ApiRestResponse.success(docList);
     }
+
+    @GetMapping("/get-content/{id}")
+    public ApiRestResponse<String> getContent(@PathVariable("id") Long id) {
+        String content = docService.getContent(id);
+        return ApiRestResponse.success(content);
+    }
 }

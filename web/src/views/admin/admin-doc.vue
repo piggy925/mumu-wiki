@@ -139,18 +139,13 @@ export default defineComponent({
     doc.value = {
       ebookId: route.query.ebookId
     };
-    const modalVisible = ref(false);
-    const modalLoading = ref(false);
     const handleSave = () => {
-      modalLoading.value = true;
       doc.value.content = editor.txt.html();
       //向后台请求保存文档
       axios.post("/doc/save", doc.value).then((response) => {
-        modalLoading.value = false;
-
         const data = response.data;
         if (data.success) {
-          modalVisible.value = false;
+          message.success("保存成功")
           handleQuery();
         } else {
           message.error(data.message);
@@ -245,7 +240,8 @@ export default defineComponent({
      * 新增
      */
     const add = () => {
-      modalVisible.value = true;
+      //清空富文本编辑器中的内容
+      editor.txt.html("");
       doc.value = {
         ebookId: route.query.ebookId
       };
@@ -256,12 +252,27 @@ export default defineComponent({
     };
 
     /**
+     * 获取文档内容
+     **/
+    const getContent = () => {
+      axios.get("/doc/get-content/" + doc.value.id).then((response) => {
+        const data = response.data;
+        if (data.success) {
+          editor.txt.html(data.content);
+        } else {
+          message.error(data.message);
+        }
+      });
+    };
+
+    /**
      * 编辑
      */
     const edit = (record: any) => {
-      modalVisible.value = true;
+      //清空富文本编辑器中的内容
+      editor.txt.html("");
       doc.value = Tool.copy(record);
-
+      getContent();
       docTreeSelectData.value = Tool.copy(docTree.value);
       setDisabled(docTreeSelectData.value, record.id);
       //为树形选择增加'无'选项，用于新增一级节点
@@ -308,10 +319,7 @@ export default defineComponent({
       edit,
       add,
       handleDelete,
-      handleSearchByName,
-
-      modalVisible,
-      modalLoading
+      handleSearchByName
     }
   }
 });

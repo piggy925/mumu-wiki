@@ -11,6 +11,7 @@ import com.mumu.wiki.resp.DocResp;
 import com.mumu.wiki.service.DocService;
 import com.mumu.wiki.util.CopyUtil;
 import org.springframework.stereotype.Service;
+import org.springframework.util.ObjectUtils;
 
 import javax.annotation.Resource;
 import java.util.List;
@@ -63,6 +64,16 @@ public class DocServiceImpl implements DocService {
         QueryWrapper<Doc> wrapper = new QueryWrapper<>();
         wrapper.in("id", ids);
         docMapper.delete(wrapper);
+    }
+
+    @Override
+    public String getContent(Long id) {
+        String txt = "";
+        Content content = contentMapper.selectByPrimaryKey(id);
+        if (!ObjectUtils.isEmpty(content)) {
+            txt = content.getContent();
+        }
+        return txt;
     }
 
     private List<DocResp> getDocResp(List<Doc> docList) {

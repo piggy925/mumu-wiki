@@ -16,4 +16,6 @@ public interface DocService {
     void delete(Long id);
 
     void delete(List<String> ids);
+
+    String getContent(Long id);
 }
