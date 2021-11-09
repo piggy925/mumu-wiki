@@ -1,7 +1,9 @@
 package com.mumu.wiki.service.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.mumu.wiki.model.mapper.ContentMapper;
 import com.mumu.wiki.model.mapper.DocMapper;
+import com.mumu.wiki.model.pojo.Content;
 import com.mumu.wiki.model.pojo.Doc;
 import com.mumu.wiki.req.DocQueryReq;
 import com.mumu.wiki.req.DocSaveReq;
@@ -17,6 +19,8 @@ import java.util.List;
 public class DocServiceImpl implements DocService {
     @Resource
     private DocMapper docMapper;
+    @Resource
+    private ContentMapper contentMapper;
 
     @Override
     public List<DocResp> getAllDoc() {
@@ -35,9 +39,14 @@ public class DocServiceImpl implements DocService {
     @Override
     public void save(DocSaveReq req) {
         Doc doc = CopyUtil.copy(req, Doc.class);
+        Content content = CopyUtil.copy(req, Content.class);
         if (doc.getId() != null) {
             //分类id不为空，执行更新操作
             docMapper.updateByPrimaryKeySelective(doc);
+            int count = contentMapper.updateByPrimaryKeySelective(content);
+            if (count == 0) {
+                contentMapper.insertSelective(content);
+            }
         } else {
             //分类id为空，执行插入操作
             docMapper.insertSelective(doc);

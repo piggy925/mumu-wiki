@@ -36,7 +36,7 @@
               :defaultExpandAllRows="true"
           >
             <template #name="{ text, record }">
-              {{record.sort}} {{text}}
+              {{ record.sort }} {{ text }}
             </template>
             <template v-slot:action="{ text, record }">
               <a-space size="small">
@@ -67,7 +67,7 @@
               </a-form-item>
             </a-form>
           </p>
-          <a-form :model="doc" layout="vertical"> 
+          <a-form :model="doc" layout="vertical">
             <a-form-item>
               <a-input v-model:value="doc.name" placeholder="名称"/>
             </a-form-item>
@@ -143,6 +143,7 @@ export default defineComponent({
     const modalLoading = ref(false);
     const handleSave = () => {
       modalLoading.value = true;
+      doc.value.content = editor.txt.html();
       //向后台请求保存文档
       axios.post("/doc/save", doc.value).then((response) => {
         modalLoading.value = false;
@@ -264,7 +265,7 @@ export default defineComponent({
       docTreeSelectData.value = Tool.copy(docTree.value);
       setDisabled(docTreeSelectData.value, record.id);
       //为树形选择增加'无'选项，用于新增一级节点
-      docTreeSelectData.value.unshift({id: 0, name: '无'}); 
+      docTreeSelectData.value.unshift({id: 0, name: '无'});
     };
 
     /**

@@ -11,4 +11,57 @@
         <!--@mbg.generated-->
         id, content
     </sql>
+    <select id="selectByPrimaryKey" parameterType="java.lang.Long" resultMap="BaseResultMap">
+        <!--@mbg.generated-->
+        SELECT
+        <include refid="Base_Column_List"/>
+        FROM content
+        WHERE id = #{id,jdbcType=BIGINT}
+    </select>
+    <delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
+        <!--@mbg.generated-->
+        DELETE FROM content
+        WHERE id = #{id,jdbcType=BIGINT}
+    </delete>
+    <insert id="insert" parameterType="com.mumu.wiki.model.pojo.Content">
+        <!--@mbg.generated-->
+        INSERT INTO content (id, content)
+        VALUES (#{id,jdbcType=BIGINT}, #{content,jdbcType=LONGVARCHAR})
+    </insert>
+    <insert id="insertSelective" parameterType="com.mumu.wiki.model.pojo.Content">
+        <!--@mbg.generated-->
+        INSERT INTO content
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id != null">
+                id,
+            </if>
+            <if test="content != null">
+                content,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="id != null">
+                #{id,jdbcType=BIGINT},
+            </if>
+            <if test="content != null">
+                #{content,jdbcType=LONGVARCHAR},
+            </if>
+        </trim>
+    </insert>
+    <update id="updateByPrimaryKeySelective" parameterType="com.mumu.wiki.model.pojo.Content">
+        <!--@mbg.generated-->
+        UPDATE content
+        <set>
+            <if test="content != null">
+                content = #{content,jdbcType=LONGVARCHAR},
+            </if>
+        </set>
+        WHERE id = #{id,jdbcType=BIGINT}
+    </update>
+    <update id="updateByPrimaryKey" parameterType="com.mumu.wiki.model.pojo.Content">
+        <!--@mbg.generated-->
+        UPDATE content
+        SET content = #{content,jdbcType=LONGVARCHAR}
+        WHERE id = #{id,jdbcType=BIGINT}
+    </update>
 </mapper>
