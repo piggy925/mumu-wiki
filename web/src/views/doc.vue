@@ -20,7 +20,7 @@
           </a-tree>
         </a-col>
         <a-col :span="18">
-          <div :innerHTML="html"></div>
+          <div class="wangEditor" :innerHTML="html"></div>
         </a-col>
       </a-row>
     </a-layout-content>
@@ -95,3 +95,61 @@ export default defineComponent({
   }
 });
 </script>
+
+<style>
+/* table 样式 */
+.wangEditor table {
+  border-top: 1px solid #ccc;
+  border-left: 1px solid #ccc;
+}
+
+.wangEditor table td,
+.wangEditor table th {
+  border-bottom: 1px solid #ccc;
+  border-right: 1px solid #ccc;
+  padding: 3px 5px;
+}
+
+.wangEditor table th {
+  border-bottom: 2px solid #ccc;
+  text-align: center;
+}
+
+/* blockquote 样式 */
+.wangEditor blockquote {
+  display: block;
+  border-left: 8px solid #d0e5f2;
+  padding: 5px 10px;
+  margin: 10px 0;
+  line-height: 1.4;
+  font-size: 100%;
+  background-color: #f1f1f1;
+}
+
+/* code 样式 */
+.wangEditor code {
+  display: inline-block;
+  *display: inline;
+  *zoom: 1;
+  background-color: #f1f1f1;
+  border-radius: 3px;
+  padding: 3px 5px;
+  margin: 0 3px;
+}
+
+.wangEditor pre code {
+  display: block;
+}
+
+/* ul ol 样式 */
+.wangEditor ul, ol {
+  margin: 10px 0 10px 20px;
+}
+
+/* 解决与antd样式冲突问题 */
+.wangEditor p {
+  margin: 20px 10px !important;
+  font-size: 16px !important;
+  font-weight: 500;
+}
+</style>
