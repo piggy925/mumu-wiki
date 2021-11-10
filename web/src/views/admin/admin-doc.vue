@@ -88,11 +88,20 @@
               <a-input v-model:value="doc.sort" placeholder="顺序"/>
             </a-form-item>
             <a-form-item>
+              <a-button type="primary" @click="handlePreviewContent">
+                <EyeOutlined/>
+                内容预览
+              </a-button>
+            </a-form-item>
+            <a-form-item>
               <div id="content"></div>
             </a-form-item>
           </a-form>
         </a-col>
       </a-row>
+      <a-drawer width="900" placement="right" :closable="false" :visible="drawVisible" @close="onDrawerClose">
+        <div class="wangEditor" :innerHTML="previewHTML"></div>
+      </a-drawer>
     </a-layout-content>
   </a-layout>
 </template>
@@ -129,6 +138,17 @@ export default defineComponent({
         slots: {customRender: 'action'}
       }
     ];
+
+    // -------- 富文本预览 ---------
+    const drawVisible = ref(false);
+    const previewHTML = ref();
+    const handlePreviewContent = () => {
+      previewHTML.value = editor.txt.html();
+      drawVisible.value = true;
+    };
+    const onDrawerClose = () => {
+      drawVisible.value = false;
+    };
 
     // -------- 表单 ---------
     const editor = new E('#content')
@@ -316,6 +336,8 @@ export default defineComponent({
       columns,
       loading,
       param,
+      drawVisible,
+      previewHTML,
 
       handleSave,
       handleQuery,
@@ -323,7 +345,9 @@ export default defineComponent({
       edit,
       add,
       handleDelete,
-      handleSearchByName
+      handleSearchByName,
+      handlePreviewContent,
+      onDrawerClose
     }
   }
 });
