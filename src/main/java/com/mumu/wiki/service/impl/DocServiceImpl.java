@@ -24,8 +24,10 @@ public class DocServiceImpl implements DocService {
     private ContentMapper contentMapper;
 
     @Override
-    public List<DocResp> getAllDoc() {
-        List<Doc> docList = docMapper.selectList(new QueryWrapper<>());
+    public List<DocResp> getDoc(Long ebookId) {
+        QueryWrapper<Doc> wrapper = new QueryWrapper<>();
+        wrapper.eq("ebook_id", ebookId);
+        List<Doc> docList = docMapper.selectList(wrapper);
         return getDocResp(docList);
     }
 

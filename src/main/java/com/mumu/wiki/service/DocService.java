@@ -7,7 +7,7 @@ import com.mumu.wiki.resp.DocResp;
 import java.util.List;
 
 public interface DocService {
-    List<DocResp> getAllDoc();
+    List<DocResp> getDoc(Long ebookId);
 
     List<DocResp> searchByName(DocQueryReq req);
 

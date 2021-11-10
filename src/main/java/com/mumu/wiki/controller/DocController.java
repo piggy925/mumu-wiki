@@ -21,9 +21,9 @@ public class DocController {
     @Resource
     private DocService docService;
 
-    @GetMapping("/all")
-    public ApiRestResponse<List<DocResp>> getAllDoc() {
-        return ApiRestResponse.success(docService.getAllDoc());
+    @GetMapping("/all/{ebookId}")
+    public ApiRestResponse<List<DocResp>> getDoc(@PathVariable("ebookId") Long ebookId) {
+        return ApiRestResponse.success(docService.getDoc(ebookId));
     }
 
     @PostMapping("/save")
