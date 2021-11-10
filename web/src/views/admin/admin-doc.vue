@@ -113,6 +113,8 @@ export default defineComponent({
     param.value = {};
     const docs = ref();
     const loading = ref(false);
+    const docTreeSelectData = ref();
+    docTreeSelectData.value = [];
 
     const columns = [
       {
@@ -131,8 +133,6 @@ export default defineComponent({
     // -------- 表单 ---------
     const editor = new E('#content')
     editor.config.zIndex = 0;
-    const docTreeSelectData = ref();
-    docTreeSelectData.value = [];
     const docTree = ref();
     docTree.value = [];
     const doc = ref();
@@ -294,6 +294,10 @@ export default defineComponent({
           docs.value = data.content;
           docTree.value = [];
           docTree.value = Tool.array2Tree(docs.value, 0);
+
+          docTreeSelectData.value = Tool.copy(docTree.value);
+          //为树形选择增加'无'选项，用于新增一级节点
+          docTreeSelectData.value.unshift({id: 0, name: '无'});
         } else {
           message.error(data.message);
         }
