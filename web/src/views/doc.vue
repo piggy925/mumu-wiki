@@ -20,7 +20,7 @@
           </a-tree>
         </a-col>
         <a-col :span="18">
-
+          <div :innerHTML="html"></div>
         </a-col>
       </a-row>
     </a-layout-content>
@@ -41,6 +41,27 @@ export default defineComponent({
     const docs = ref();
     const docTree = ref();
     docTree.value = [];
+    const html = ref();
+
+    /**
+     * 获取文档内容
+     **/
+    const getContent = (id: number) => {
+      axios.get("/doc/get-content/" + id).then((response) => {
+        const data = response.data;
+        if (data.success) {
+          html.value = data.content;
+        } else {
+          message.error(data.message);
+        }
+      });
+    };
+
+    const onSelect = (selectKeys: any) => {
+      if (Tool.isNotEmpty(selectKeys)) {
+        getContent(selectKeys[0]);
+      }
+    };
 
     /**
      * 查询所有
@@ -66,7 +87,9 @@ export default defineComponent({
 
     return {
       docTree,
+      html,
 
+      onSelect,
       handleQuery
     }
   }
