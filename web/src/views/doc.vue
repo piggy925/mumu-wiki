@@ -8,6 +8,7 @@
         minHeight: '280px',
       }"
     >
+      <h3 v-if="docTree.length === 0">对不起,没有找到相关文档</h3>
       <a-row>
         <a-col :span="6">
           <a-tree
