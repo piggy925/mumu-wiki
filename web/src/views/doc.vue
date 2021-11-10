@@ -16,6 +16,7 @@
               @select="onSelect"
               :replaceFields="{ title: 'name', key: 'id', value: 'id' }"
               :defaultExpandAll="true"
+              :defaultSelectedKeys="defaultSelectedKeys"
           >
           </a-tree>
         </a-col>
@@ -42,6 +43,8 @@ export default defineComponent({
     const docTree = ref();
     docTree.value = [];
     const html = ref();
+    const defaultSelectedKeys = ref();
+    defaultSelectedKeys.value = [];
 
     /**
      * 获取文档内容
@@ -75,6 +78,11 @@ export default defineComponent({
           docs.value = data.content;
           docTree.value = [];
           docTree.value = Tool.array2Tree(docs.value, 0);
+
+          if (Tool.isNotEmpty(docTree)) {
+            defaultSelectedKeys.value = [docTree.value[0].id]
+            getContent(docTree.value[0].id);
+          }
         } else {
           message.error(data.message);
         }
@@ -88,6 +96,7 @@ export default defineComponent({
     return {
       docTree,
       html,
+      defaultSelectedKeys,
 
       onSelect,
       handleQuery
