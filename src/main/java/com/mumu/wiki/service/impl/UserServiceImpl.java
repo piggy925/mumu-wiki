@@ -51,6 +51,8 @@ public class UserServiceImpl implements UserService {
     public void save(UserSaveReq req) {
         User user = CopyUtil.copy(req, User.class);
         if (user.getId() != null) {
+            //登录名Login_Name不允许修改与重复
+            user.setLoginName(null);
             //用户id不为空，执行更新操作
             userMapper.updateByPrimaryKeySelective(user);
         } else {
