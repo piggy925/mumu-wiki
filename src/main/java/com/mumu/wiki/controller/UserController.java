@@ -7,6 +7,7 @@ import com.mumu.wiki.resp.PageResp;
 import com.mumu.wiki.resp.UserResp;
 import com.mumu.wiki.service.UserService;
 import io.swagger.annotations.Api;
+import org.springframework.util.DigestUtils;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
@@ -27,6 +28,7 @@ public class UserController {
 
     @PostMapping("/save")
     public ApiRestResponse save(@Valid @RequestBody UserSaveReq req) {
+        req.setPassword(DigestUtils.md5DigestAsHex(req.getPassword().getBytes()));
         userService.save(req);
         return ApiRestResponse.success();
     }
