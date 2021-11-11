@@ -1,6 +1,7 @@
 package com.mumu.wiki.controller;
 
 import com.mumu.wiki.common.ApiRestResponse;
+import com.mumu.wiki.exception.BusinessException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.validation.BindException;
@@ -28,6 +29,26 @@ public class ControllerExceptionHandler {
         LOG.warn("参数校验失败：{}", e.getBindingResult().getAllErrors().get(0).getDefaultMessage());
         response.setSuccess(false);
         response.setMessage(e.getBindingResult().getAllErrors().get(0).getDefaultMessage());
+        return response;
+    }
+
+    @ExceptionHandler(value = BusinessException.class)
+    @ResponseBody
+    public ApiRestResponse businessExceptionHandler(BusinessException e) {
+        ApiRestResponse response = new ApiRestResponse<>();
+        LOG.warn("业务异常：{}", e.getCode().getDesc());
+        response.setSuccess(false);
+        response.setMessage(e.getCode().getDesc());
+        return response;
+    }
+
+    @ExceptionHandler(value = Exception.class)
+    @ResponseBody
+    public ApiRestResponse businessExceptionHandler(Exception e) {
+        ApiRestResponse response = new ApiRestResponse<>();
+        LOG.error("系统异常：", e);
+        response.setSuccess(false);
+        response.setMessage("服务器异常，请联系管理员");
         return response;
     }
 }

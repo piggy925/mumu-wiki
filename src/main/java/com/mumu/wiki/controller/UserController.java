@@ -43,8 +43,8 @@ public class UserController {
     }
 
     @GetMapping("/search")
-    public ApiRestResponse<PageResp<UserResp>> getUserByName(UserQueryReq userQueryReq) {
-        PageResp<UserResp> userList = userService.searchByName(userQueryReq);
-        return ApiRestResponse.success(userList);
+    public ApiRestResponse<UserResp> getUserByName(UserQueryReq userQueryReq) {
+        UserResp user = userService.searchByName(userQueryReq);
+        return ApiRestResponse.success(user);
     }
 }

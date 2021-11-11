@@ -3,6 +3,8 @@ package com.mumu.wiki.service.impl;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
+import com.mumu.wiki.exception.BusinessException;
+import com.mumu.wiki.exception.BusinessExceptionCode;
 import com.mumu.wiki.model.mapper.UserMapper;
 import com.mumu.wiki.model.pojo.User;
 import com.mumu.wiki.req.UserQueryReq;
@@ -13,6 +15,7 @@ import com.mumu.wiki.service.UserService;
 import com.mumu.wiki.util.CopyUtil;
 import com.mumu.wiki.util.PageUtil;
 import org.springframework.stereotype.Service;
+import org.springframework.util.ObjectUtils;
 
 import javax.annotation.Resource;
 import java.util.List;
@@ -39,14 +42,9 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public PageResp<UserResp> searchByName(UserQueryReq userQueryReq) {
-        if (PageUtil.needPage(userQueryReq)) {
-            PageHelper.startPage(userQueryReq.getPageNum(), userQueryReq.getPageSize());
-        }
-        QueryWrapper<User> wrapper = new QueryWrapper<>();
-        wrapper.like("login_name", userQueryReq.getLoginName());
-        List<User> userList = userMapper.selectList(wrapper);
-        return getPageResp(userList);
+    public UserResp searchByName(UserQueryReq userQueryReq) {
+        User user = getUserByLoginName(userQueryReq.getLoginName());
+        return CopyUtil.copy(user, UserResp.class);
     }
 
     @Override
@@ -56,6 +54,11 @@ public class UserServiceImpl implements UserService {
             //用户id不为空，执行更新操作
             userMapper.updateByPrimaryKeySelective(user);
         } else {
+            User userDB = getUserByLoginName(req.getLoginName());
+            //登录名Login_Name不允许修改与重复
+            if (!ObjectUtils.isEmpty(userDB)) {
+                throw new BusinessException(BusinessExceptionCode.USER_LOGIN_NAME_EXIST);
+            }
             //用户id为空，执行插入操作
             userMapper.insertSelective(user);
         }
@@ -64,6 +67,12 @@ public class UserServiceImpl implements UserService {
     @Override
     public void delete(Long id) {
         userMapper.deleteByPrimaryKey(id);
+    }
+
+    private User getUserByLoginName(String loginName) {
+        QueryWrapper<User> wrapper = new QueryWrapper<>();
+        wrapper.eq("login_name", loginName);
+        return userMapper.selectOne(wrapper);
     }
 
     private PageResp<UserResp> getPageResp(List<User> userList) {

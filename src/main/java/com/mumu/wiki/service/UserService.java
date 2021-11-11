@@ -12,7 +12,7 @@ public interface UserService {
 
     PageResp<UserResp> getUserList(UserQueryReq req);
 
-    PageResp<UserResp> searchByName(UserQueryReq userQueryReq);
+    UserResp searchByName(UserQueryReq userQueryReq);
 
     void save(UserSaveReq req);
 
