@@ -1,5 +1,6 @@
 package com.mumu.wiki.controller;
 
+import com.alibaba.fastjson.JSONObject;
 import com.mumu.wiki.common.ApiRestResponse;
 import com.mumu.wiki.req.UserLoginReq;
 import com.mumu.wiki.req.UserQueryReq;
@@ -9,13 +10,16 @@ import com.mumu.wiki.resp.PageResp;
 import com.mumu.wiki.resp.UserLoginResp;
 import com.mumu.wiki.resp.UserResp;
 import com.mumu.wiki.service.UserService;
+import com.mumu.wiki.util.SnowFlake;
 import io.swagger.annotations.Api;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.util.DigestUtils;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
 import javax.validation.Valid;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 @Api(tags = "用户接口")
 @RestController
@@ -23,8 +27,13 @@ import java.util.List;
 public class UserController {
     @Resource
     private UserService userService;
+    @Resource
+    private RedisTemplate<String, String> redisTemplate;
+    @Resource
+    private SnowFlake snowFlake;
 
     @GetMapping("/all")
+
     public ApiRestResponse<List<UserResp>> getAllUser() {
         return ApiRestResponse.success(userService.getAllUser());
     }
@@ -47,6 +56,11 @@ public class UserController {
     public ApiRestResponse<UserLoginResp> login(@Valid @RequestBody UserLoginReq req) {
         req.setPassword(DigestUtils.md5DigestAsHex(req.getPassword().getBytes()));
         UserLoginResp userLoginResp = userService.login(req);
+
+        Long token = snowFlake.nextId();
+        userLoginResp.setToken(token.toString());
+        redisTemplate.opsForValue().set(token.toString(), JSONObject.toJSONString(userLoginResp), 3600 * 24, TimeUnit.SECONDS);
+
         return ApiRestResponse.success(userLoginResp);
     }
 

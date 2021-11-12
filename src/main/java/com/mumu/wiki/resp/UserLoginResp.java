@@ -25,4 +25,6 @@ public class UserLoginResp {
      */
     @NotBlank(message = "【昵称】不能为空")
     private String name;
+
+    private String token;
 }
