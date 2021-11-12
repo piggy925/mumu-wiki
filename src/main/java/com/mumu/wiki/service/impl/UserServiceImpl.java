@@ -8,6 +8,7 @@ import com.mumu.wiki.exception.BusinessExceptionCode;
 import com.mumu.wiki.model.mapper.UserMapper;
 import com.mumu.wiki.model.pojo.User;
 import com.mumu.wiki.req.UserQueryReq;
+import com.mumu.wiki.req.UserResetPasswordReq;
 import com.mumu.wiki.req.UserSaveReq;
 import com.mumu.wiki.resp.PageResp;
 import com.mumu.wiki.resp.UserResp;
@@ -65,6 +66,12 @@ public class UserServiceImpl implements UserService {
             //用户id为空，执行插入操作
             userMapper.insertSelective(user);
         }
+    }
+
+    @Override
+    public void resetPassword(UserResetPasswordReq req) {
+        User user = CopyUtil.copy(req, User.class);
+        userMapper.updateByPrimaryKeySelective(user);
     }
 
     @Override

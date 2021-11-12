@@ -2,6 +2,7 @@ package com.mumu.wiki.controller;
 
 import com.mumu.wiki.common.ApiRestResponse;
 import com.mumu.wiki.req.UserQueryReq;
+import com.mumu.wiki.req.UserResetPasswordReq;
 import com.mumu.wiki.req.UserSaveReq;
 import com.mumu.wiki.resp.PageResp;
 import com.mumu.wiki.resp.UserResp;
@@ -30,6 +31,13 @@ public class UserController {
     public ApiRestResponse save(@Valid @RequestBody UserSaveReq req) {
         req.setPassword(DigestUtils.md5DigestAsHex(req.getPassword().getBytes()));
         userService.save(req);
+        return ApiRestResponse.success();
+    }
+
+    @PostMapping("/reset-password")
+    public ApiRestResponse resetPassword(@Valid @RequestBody UserResetPasswordReq req) {
+        req.setPassword(DigestUtils.md5DigestAsHex(req.getPassword().getBytes()));
+        userService.resetPassword(req);
         return ApiRestResponse.success();
     }
 

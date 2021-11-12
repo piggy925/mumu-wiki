@@ -1,6 +1,7 @@
 package com.mumu.wiki.service;
 
 import com.mumu.wiki.req.UserQueryReq;
+import com.mumu.wiki.req.UserResetPasswordReq;
 import com.mumu.wiki.req.UserSaveReq;
 import com.mumu.wiki.resp.PageResp;
 import com.mumu.wiki.resp.UserResp;
@@ -17,4 +18,6 @@ public interface UserService {
     void save(UserSaveReq req);
 
     void delete(Long id);
+
+    void resetPassword(UserResetPasswordReq req);
 }
