@@ -1,10 +1,12 @@
 package com.mumu.wiki.controller;
 
 import com.mumu.wiki.common.ApiRestResponse;
+import com.mumu.wiki.req.UserLoginReq;
 import com.mumu.wiki.req.UserQueryReq;
 import com.mumu.wiki.req.UserResetPasswordReq;
 import com.mumu.wiki.req.UserSaveReq;
 import com.mumu.wiki.resp.PageResp;
+import com.mumu.wiki.resp.UserLoginResp;
 import com.mumu.wiki.resp.UserResp;
 import com.mumu.wiki.service.UserService;
 import io.swagger.annotations.Api;
@@ -39,6 +41,13 @@ public class UserController {
         req.setPassword(DigestUtils.md5DigestAsHex(req.getPassword().getBytes()));
         userService.resetPassword(req);
         return ApiRestResponse.success();
+    }
+
+    @PostMapping("/login")
+    public ApiRestResponse<UserLoginResp> login(@Valid @RequestBody UserLoginReq req) {
+        req.setPassword(DigestUtils.md5DigestAsHex(req.getPassword().getBytes()));
+        UserLoginResp userLoginResp = userService.login(req);
+        return ApiRestResponse.success(userLoginResp);
     }
 
     @DeleteMapping("/delete/{id}")

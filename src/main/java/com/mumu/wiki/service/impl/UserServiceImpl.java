@@ -7,10 +7,12 @@ import com.mumu.wiki.exception.BusinessException;
 import com.mumu.wiki.exception.BusinessExceptionCode;
 import com.mumu.wiki.model.mapper.UserMapper;
 import com.mumu.wiki.model.pojo.User;
+import com.mumu.wiki.req.UserLoginReq;
 import com.mumu.wiki.req.UserQueryReq;
 import com.mumu.wiki.req.UserResetPasswordReq;
 import com.mumu.wiki.req.UserSaveReq;
 import com.mumu.wiki.resp.PageResp;
+import com.mumu.wiki.resp.UserLoginResp;
 import com.mumu.wiki.resp.UserResp;
 import com.mumu.wiki.service.UserService;
 import com.mumu.wiki.util.CopyUtil;
@@ -72,6 +74,23 @@ public class UserServiceImpl implements UserService {
     public void resetPassword(UserResetPasswordReq req) {
         User user = CopyUtil.copy(req, User.class);
         userMapper.updateByPrimaryKeySelective(user);
+    }
+
+    @Override
+    public UserLoginResp login(UserLoginReq req) {
+        User user = getUserByLoginName(req.getLoginName());
+        if (ObjectUtils.isEmpty(user)) {
+            //用户名不存在
+            throw new BusinessException(BusinessExceptionCode.USER_LOGIN_NAME_NOT_EXIST);
+        } else {
+            if (user.getPassword().equals(req.getPassword())) {
+                //登录成功
+                return CopyUtil.copy(user, UserLoginResp.class);
+            } else {
+                //密码错误
+                throw new BusinessException(BusinessExceptionCode.WRONG_PASSWORD);
+            }
+        }
     }
 
     @Override
