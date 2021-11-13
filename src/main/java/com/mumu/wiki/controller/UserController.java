@@ -64,6 +64,12 @@ public class UserController {
         return ApiRestResponse.success(userLoginResp);
     }
 
+    @GetMapping("/logout/{token}")
+    public ApiRestResponse delete(@PathVariable("token") String token) {
+        redisTemplate.delete(token);
+        return ApiRestResponse.success();
+    }
+
     @DeleteMapping("/delete/{id}")
     public ApiRestResponse delete(@PathVariable("id") Long id) {
         userService.delete(id);

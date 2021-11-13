@@ -24,6 +24,18 @@
       <a class="login-menu" v-if="!user.id" @click="showLoginModal">
         <span>登录</span>
       </a>
+
+      <a-popconfirm
+          title="确定要退出登录？"
+          ok-text="是"
+          cancel-text="否"
+          @confirm="handleLogout"
+      >
+        <a class="logout" v-if="user.id">
+          <span>退出登录</span>
+        </a>
+      </a-popconfirm>
+
       <a class="login-menu" v-if="user.id">
         <span>欢迎您：{{ user.name }}</span>
       </a>
@@ -90,6 +102,19 @@ export default defineComponent({
       });
     };
 
+    // 退出登录
+    const handleLogout = () => {
+      axios.get('/user/logout/' + user.value.token).then((response) => {
+        const data = response.data;
+        if (data.success) {
+          message.success("退出登录成功！");
+          store.commit("setUser", {});
+        } else {
+          message.error(data.message);
+        }
+      });
+    };
+
     return {
       user,
       loginUser,
@@ -97,7 +122,8 @@ export default defineComponent({
       loginModalLoading,
 
       showLoginModal,
-      login
+      login,
+      handleLogout
     }
   }
 })
@@ -116,8 +142,17 @@ export default defineComponent({
 
 .login-menu {
   position: absolute;
+  float: right;
   color: white;
-  margin-right: 80px;
   right: 0;
+  margin-right: 100px;
+}
+
+.logout {
+  position: absolute;
+  float: right;
+  color: white;
+  right: 0;
+  margin-right: 30px;
 }
 </style>
