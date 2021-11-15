@@ -69,6 +69,11 @@ public class DocServiceImpl implements DocService {
     }
 
     @Override
+    public void vote(Long id) {
+        docMapper.increaseVoteCount(id);
+    }
+
+    @Override
     public String getContent(Long id) {
         String txt = "";
         Content content = contentMapper.selectByPrimaryKey(id);

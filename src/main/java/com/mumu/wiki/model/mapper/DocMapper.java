@@ -17,5 +17,17 @@ public interface DocMapper extends BaseMapper<Doc> {
 
     int updateByPrimaryKey(Doc record);
 
+    /**
+     * 增加阅读数
+     *
+     * @param id 文档id
+     */
     void increaseViewCount(@Param("id") Long id);
+
+    /**
+     * 增加点赞数
+     *
+     * @param id 文档id
+     */
+    void increaseVoteCount(@Param("id") Long id);
 }

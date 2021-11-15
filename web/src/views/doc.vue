@@ -32,6 +32,14 @@
           <div class="wangEditor" :innerHTML="html"></div>
         </a-col>
       </a-row>
+      <div class="vote-div">
+        <a-button type="primary" shape="round" :size="large" @click="vote">
+          <template #icon>
+            <LikeOutlined/>
+            点赞：{{ doc.voteCount }}
+          </template>
+        </a-button>
+      </div>
     </a-layout-content>
   </a-layout>
 </template>
@@ -101,6 +109,17 @@ export default defineComponent({
       });
     };
 
+    const vote = () => {
+      axios.post("/doc/vote/" + doc.value.id).then((response) => {
+        const data = response.data;
+        if (data.success) {
+          doc.value.voteCount++;
+        } else {
+          message.error(data.message);
+        }
+      });
+    };
+
     onMounted(() => {
       handleQuery();
     });
@@ -112,7 +131,8 @@ export default defineComponent({
       defaultSelectedKeys,
 
       onSelect,
-      handleQuery
+      handleQuery,
+      vote
     }
   }
 });
@@ -173,5 +193,11 @@ export default defineComponent({
   margin: 20px 10px !important;
   font-size: 16px !important;
   font-weight: 500;
+}
+
+/* 点赞 */
+.vote-div {
+  text-align: center;
+  padding: 15px;
 }
 </style>

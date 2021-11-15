@@ -41,6 +41,12 @@ public class DocController {
         return ApiRestResponse.success();
     }
 
+    @PostMapping("/vote/{id}")
+    public ApiRestResponse vote(@PathVariable("id") Long id) {
+        docService.vote(id);
+        return ApiRestResponse.success();
+    }
+
     @GetMapping("/search")
     public ApiRestResponse<List<DocResp>> getDocByName(DocQueryReq docQueryReq) {
         List<DocResp> docList = docService.searchByName(docQueryReq);
