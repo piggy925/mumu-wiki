@@ -72,6 +72,8 @@ public class DocServiceImpl implements DocService {
     public String getContent(Long id) {
         String txt = "";
         Content content = contentMapper.selectByPrimaryKey(id);
+        //文档阅读数+1
+        docMapper.increaseViewCount(id);
         if (!ObjectUtils.isEmpty(content)) {
             txt = content.getContent();
         }
