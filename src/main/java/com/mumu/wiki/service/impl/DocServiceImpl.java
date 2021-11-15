@@ -1,6 +1,8 @@
 package com.mumu.wiki.service.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.mumu.wiki.exception.BusinessException;
+import com.mumu.wiki.exception.BusinessExceptionCode;
 import com.mumu.wiki.model.mapper.ContentMapper;
 import com.mumu.wiki.model.mapper.DocMapper;
 import com.mumu.wiki.model.pojo.Content;
@@ -10,6 +12,8 @@ import com.mumu.wiki.req.DocSaveReq;
 import com.mumu.wiki.resp.DocResp;
 import com.mumu.wiki.service.DocService;
 import com.mumu.wiki.util.CopyUtil;
+import com.mumu.wiki.util.RedisUtil;
+import com.mumu.wiki.util.RequestContext;
 import org.springframework.stereotype.Service;
 import org.springframework.util.ObjectUtils;
 
@@ -22,6 +26,8 @@ public class DocServiceImpl implements DocService {
     private DocMapper docMapper;
     @Resource
     private ContentMapper contentMapper;
+    @Resource
+    private RedisUtil redisUtil;
 
     @Override
     public List<DocResp> getDoc(Long ebookId) {
@@ -70,7 +76,14 @@ public class DocServiceImpl implements DocService {
 
     @Override
     public void vote(Long id) {
-        docMapper.increaseVoteCount(id);
+        // docMapperCust.increaseVoteCount(id);
+        // 远程IP+doc.id作为key，24小时内不能重复
+        String ip = RequestContext.getRemoteAddr();
+        if (redisUtil.validateRepeat("DOC_VOTE_" + id + "_" + ip, 5000)) {
+            docMapper.increaseVoteCount(id);
+        } else {
+            throw new BusinessException(BusinessExceptionCode.VOTE_REPEAT);
+        }
     }
 
     @Override
