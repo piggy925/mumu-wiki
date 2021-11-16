@@ -34,10 +34,18 @@
         <template #renderItem="{ item }">
           <a-list-item key="item.name">
             <template #actions>
-          <span v-for="{ type, text } in actions" :key="type">
-            <component v-bind:is="type" style="margin-right: 8px"/>
-            {{ text }}
-          </span>
+              <span>
+                <component v-bind:is="'FileOutlined'" style="margin-right: 8px"/>
+                {{ item.docCount }}
+              </span>
+              <span>
+                <component v-bind:is="'EyeOutlined'" style="margin-right: 8px"/>
+                {{ item.viewCount }}
+              </span>
+              <span>
+                <component v-bind:is="'LikeOutlined'" style="margin-right: 8px"/>
+                {{ item.voteCount }}
+              </span>
             </template>
             <a-list-item-meta :description="item.description">
               <template #title>
@@ -57,7 +65,7 @@
 </template>
 
 <script lang="ts">
-import {LikeOutlined, MessageOutlined, StarOutlined} from '@ant-design/icons-vue';
+import {EyeOutlined, FileOutlined, LikeOutlined} from '@ant-design/icons-vue';
 import {defineComponent, onMounted, ref} from 'vue';
 import axios from 'axios';
 import {Tool} from "@/util/tool";
@@ -66,9 +74,9 @@ import {message} from "_ant-design-vue@2.2.8@ant-design-vue";
 export default defineComponent({
   name: 'Home',
   components: {
-    StarOutlined,
+    FileOutlined,
+    EyeOutlined,
     LikeOutlined,
-    MessageOutlined,
   },
   setup() {
     const ebooks = ref();
@@ -127,9 +135,9 @@ export default defineComponent({
 
 
     const actions: Record<string, string>[] = [
-      {type: 'StarOutlined', text: '156'},
-      {type: 'LikeOutlined', text: '156'},
-      {type: 'MessageOutlined', text: '2'},
+      {type: 'FileOutlined', text: '156'},
+      {type: 'EyeOutlined', text: '156'},
+      {type: 'LikeOutlined', text: '2'},
     ];
 
     return {
