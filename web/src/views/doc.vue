@@ -21,7 +21,7 @@
           >
           </a-tree>
         </a-col>
-        <a-col :span="18">
+        <a-col :span="18" v-if="docTree.length !== 0">
           <div>
             <h2>{{ doc.name }}</h2>
             <div>
@@ -32,7 +32,7 @@
           <div class="wangEditor" :innerHTML="html"></div>
         </a-col>
       </a-row>
-      <div class="vote-div">
+      <div class="vote-div" v-if="docTree.length !== 0">
         <a-button type="primary" shape="round" :size="large" @click="vote">
           <template #icon>
             <LikeOutlined/>
