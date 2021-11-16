@@ -14,6 +14,7 @@ import com.mumu.wiki.service.DocService;
 import com.mumu.wiki.util.CopyUtil;
 import com.mumu.wiki.util.RedisUtil;
 import com.mumu.wiki.util.RequestContext;
+import com.mumu.wiki.websocket.WebSocketServer;
 import org.springframework.stereotype.Service;
 import org.springframework.util.ObjectUtils;
 
@@ -28,6 +29,8 @@ public class DocServiceImpl implements DocService {
     private ContentMapper contentMapper;
     @Resource
     private RedisUtil redisUtil;
+    @Resource
+    private WebSocketServer webSocketServer;
 
     @Override
     public List<DocResp> getDoc(Long ebookId) {
@@ -84,6 +87,9 @@ public class DocServiceImpl implements DocService {
         } else {
             throw new BusinessException(BusinessExceptionCode.VOTE_REPEAT);
         }
+        //点赞后向前端发送消息
+        Doc doc = docMapper.selectByPrimaryKey(id);
+        webSocketServer.sendInfo("「" + doc.getName() + "」被点赞");
     }
 
     @Override
