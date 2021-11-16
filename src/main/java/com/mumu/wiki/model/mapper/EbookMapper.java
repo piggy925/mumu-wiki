@@ -21,4 +21,9 @@ public interface EbookMapper extends BaseMapper<Ebook> {
     List<Ebook> selectEbookList();
 
     List<Ebook> selectEbookByName(String name);
+
+    /**
+     * 更新电子书信息：用于定时任务.
+     */
+    void updateEbookInfo();
 }

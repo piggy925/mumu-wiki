@@ -80,4 +80,9 @@ public class EbookServiceImpl implements EbookService {
         pageResp.setList(ebookRespList);
         return pageResp;
     }
+
+    @Override
+    public void updateEbookInfo() {
+        ebookMapper.updateEbookInfo();
+    }
 }
