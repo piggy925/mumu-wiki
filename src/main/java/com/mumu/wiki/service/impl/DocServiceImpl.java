@@ -14,7 +14,7 @@ import com.mumu.wiki.service.DocService;
 import com.mumu.wiki.util.CopyUtil;
 import com.mumu.wiki.util.RedisUtil;
 import com.mumu.wiki.util.RequestContext;
-import com.mumu.wiki.websocket.WebSocketServer;
+import com.mumu.wiki.websocket.WebSocketService;
 import org.springframework.stereotype.Service;
 import org.springframework.util.ObjectUtils;
 
@@ -30,7 +30,7 @@ public class DocServiceImpl implements DocService {
     @Resource
     private RedisUtil redisUtil;
     @Resource
-    private WebSocketServer webSocketServer;
+    private WebSocketService webSocketService;
 
     @Override
     public List<DocResp> getDoc(Long ebookId) {
@@ -89,7 +89,7 @@ public class DocServiceImpl implements DocService {
         }
         //点赞后向前端发送消息
         Doc doc = docMapper.selectByPrimaryKey(id);
-        webSocketServer.sendInfo("「" + doc.getName() + "」被点赞");
+        webSocketService.sendInfo("「" + doc.getName() + "」被点赞");
     }
 
     @Override
