@@ -15,6 +15,7 @@ import com.mumu.wiki.util.CopyUtil;
 import com.mumu.wiki.util.RedisUtil;
 import com.mumu.wiki.util.RequestContext;
 import com.mumu.wiki.websocket.WebSocketService;
+import org.jboss.logging.MDC;
 import org.springframework.stereotype.Service;
 import org.springframework.util.ObjectUtils;
 
@@ -88,8 +89,9 @@ public class DocServiceImpl implements DocService {
             throw new BusinessException(BusinessExceptionCode.VOTE_REPEAT);
         }
         //点赞后向前端发送消息
+        String logId = String.valueOf(MDC.get("LOG_ID"));
         Doc doc = docMapper.selectByPrimaryKey(id);
-        webSocketService.sendInfo("「" + doc.getName() + "」被点赞");
+        webSocketService.sendInfo("「" + doc.getName() + "」被点赞", logId);
     }
 
     @Override
