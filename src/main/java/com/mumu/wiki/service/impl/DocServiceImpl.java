@@ -17,6 +17,7 @@ import com.mumu.wiki.util.RequestContext;
 import com.mumu.wiki.websocket.WebSocketService;
 import org.jboss.logging.MDC;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.ObjectUtils;
 
 import javax.annotation.Resource;
@@ -49,6 +50,7 @@ public class DocServiceImpl implements DocService {
         return getDocResp(docList);
     }
 
+    @Transactional
     @Override
     public void save(DocSaveReq req) {
         Doc doc = CopyUtil.copy(req, Doc.class);
