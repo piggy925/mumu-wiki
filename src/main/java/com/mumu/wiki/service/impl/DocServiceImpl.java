@@ -15,7 +15,7 @@ import com.mumu.wiki.util.CopyUtil;
 import com.mumu.wiki.util.RedisUtil;
 import com.mumu.wiki.util.RequestContext;
 import com.mumu.wiki.websocket.WebSocketService;
-import org.jboss.logging.MDC;
+import org.apache.rocketmq.spring.core.RocketMQTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.ObjectUtils;
@@ -33,6 +33,8 @@ public class DocServiceImpl implements DocService {
     private RedisUtil redisUtil;
     @Resource
     private WebSocketService webSocketService;
+    @Resource
+    private RocketMQTemplate rocketMQTemplate;
 
     @Override
     public List<DocResp> getDoc(Long ebookId) {
@@ -82,18 +84,16 @@ public class DocServiceImpl implements DocService {
 
     @Override
     public void vote(Long id) {
-        // docMapperCust.increaseVoteCount(id);
         // 远程IP+doc.id作为key，24小时内不能重复
         String ip = RequestContext.getRemoteAddr();
-        if (redisUtil.validateRepeat("DOC_VOTE_" + id + "_" + ip, 5000)) {
+        if (redisUtil.validateRepeat("DOC_VOTE_" + id + "_" + ip, 3600 * 24)) {
             docMapper.increaseVoteCount(id);
         } else {
             throw new BusinessException(BusinessExceptionCode.VOTE_REPEAT);
         }
         //点赞后向前端发送消息
-        String logId = String.valueOf(MDC.get("LOG_ID"));
         Doc doc = docMapper.selectByPrimaryKey(id);
-        webSocketService.sendInfo("「" + doc.getName() + "」被点赞", logId);
+        rocketMQTemplate.convertAndSend("VOTE_TOPIC", "「" + doc.getName() + "」被点赞");
     }
 
     @Override
