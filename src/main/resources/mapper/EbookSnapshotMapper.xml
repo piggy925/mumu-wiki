@@ -119,4 +119,28 @@
         vote_increase = #{voteIncrease,jdbcType=INTEGER}
         WHERE id = #{id,jdbcType=BIGINT}
     </update>
+
+    <update id="genEbookSnapshot">
+        #所有的电子书生成一条今天的快照（如果没有),在快照表中插入电子书id，今日日期，其他数据置为0
+                INSERT INTO ebook_snapshot(ebook_id, date, view_count, vote_count, view_increase, vote_increase)
+                SELECT t1.id, CURDATE(), 0, 0, 0, 0
+                FROM ebook t1
+                WHERE NOT EXISTS(SELECT 1 FROM ebook_snapshot t2 WHERE t1.id = t2.ebook_id AND t2.date = CURDATE());
+
+                #将电子书表的总阅读数、总点赞数更新到快照表中
+                UPDATE ebook_snapshot t1, ebook t2
+                SET t1.view_count = t2.view_count,
+                    t1.vote_count = t2.vote_count
+                WHERE t1.date = CURDATE()
+                  AND t1.ebook_id = t2.id;
+
+                #将今日新增的阅读数、点赞数更新到快照表中
+                UPDATE ebook_snapshot t1 LEFT JOIN (SELECT ebook_id, view_count, vote_count
+                                                    FROM ebook_snapshot
+                                                    WHERE date = DATE_SUB(CURDATE(), INTERVAL 1 DAY)) t2
+                        ON t1.ebook_id = t2.ebook_id
+                SET t1.view_increase = t1.view_count - IFNULL(t2.view_count, 0),
+                    t1.vote_increase = t1.vote_count - IFNULL(t2.vote_count, 0)
+                WHERE date = CURDATE();
+    </update>
 </mapper>
