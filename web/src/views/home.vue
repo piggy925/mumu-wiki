@@ -26,7 +26,7 @@
         :style="{ background: '#fff', padding: '24px', margin: 0, minHeight: '280px' }"
     >
       <div class="welcome" v-show="isShowWelcome">
-        <h1>欢迎使用MuMu Wiki</h1>
+        <the-welcome></the-welcome>
       </div>
       <a-list v-show="!isShowWelcome" item-layout="vertical" :grid="{ gutter: 16, column: 3 }" size="large"
               :pagination="pagination"
@@ -65,18 +65,20 @@
 </template>
 
 <script lang="ts">
-import {EyeOutlined, FileOutlined, LikeOutlined} from '@ant-design/icons-vue';
 import {defineComponent, onMounted, ref} from 'vue';
 import axios from 'axios';
 import {Tool} from "@/util/tool";
 import {message} from "_ant-design-vue@2.2.8@ant-design-vue";
+import TheWelcome from '@/components/the-welcome.vue';
+
 
 export default defineComponent({
   name: 'Home',
   components: {
-    FileOutlined,
-    EyeOutlined,
-    LikeOutlined,
+    // FileOutlined,
+    // EyeOutlined,
+    // LikeOutlined,
+    TheWelcome,
   },
   setup() {
     const ebooks = ref();
