@@ -143,4 +143,15 @@
                     t1.vote_increase = t1.vote_count - IFNULL(t2.vote_count, 0)
                 WHERE date = CURDATE();
     </update>
+
+    <select id="getEbookStatistic" resultType="com.mumu.wiki.resp.EbookStatisticResp">
+        SELECT date,
+               SUM(view_count)    viewCount,
+               SUM(vote_count)    voteCount,
+               SUM(view_increase) viewIncrease,
+               SUM(vote_increase) voteIncrease
+        FROM ebook_snapshot
+        WHERE date >= DATE_SUB(CURDATE(), INTERVAL 1 DAY)
+        GROUP BY date
+    </select>
 </mapper>

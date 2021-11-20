@@ -2,6 +2,9 @@ package com.mumu.wiki.model.mapper;
 
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.mumu.wiki.model.pojo.EbookSnapshot;
+import com.mumu.wiki.resp.EbookStatisticResp;
+
+import java.util.List;
 
 public interface EbookSnapshotMapper extends BaseMapper<EbookSnapshot> {
     int deleteByPrimaryKey(Long id);
@@ -17,4 +20,6 @@ public interface EbookSnapshotMapper extends BaseMapper<EbookSnapshot> {
     int updateByPrimaryKey(EbookSnapshot record);
 
     void genEbookSnapshot();
+
+    List<EbookStatisticResp> getEbookStatistic();
 }
