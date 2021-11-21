@@ -153,5 +153,16 @@
         FROM ebook_snapshot
         WHERE date >= DATE_SUB(CURDATE(), INTERVAL 1 DAY)
         GROUP BY date
+        ORDER BY date ASC
+    </select>
+
+    <select id="get30EbookStatistic" resultType="com.mumu.wiki.resp.EbookStatisticResp">
+        SELECT date,
+               SUM(view_increase) viewIncrease,
+               SUM(vote_increase) voteIncrease
+        FROM ebook_snapshot
+        WHERE date BETWEEN DATE_SUB(CURDATE(), INTERVAL 30 DAY) AND DATE_SUB(CURDATE(), INTERVAL 1 DAY)
+        GROUP BY date
+        ORDER BY date ASC
     </select>
 </mapper>

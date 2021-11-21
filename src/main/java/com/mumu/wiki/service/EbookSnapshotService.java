@@ -8,4 +8,6 @@ public interface EbookSnapshotService {
     void genEbookSnapshot();
 
     List<EbookStatisticResp> getEbookStatistic();
+
+    List<EbookStatisticResp> get30EbookStatistic();
 }

@@ -100,11 +100,14 @@
 import {defineComponent, onMounted, ref} from 'vue';
 import axios from "axios";
 
+declare let echarts: any;
+
 export default defineComponent({
   name: 'the-welcome',
   setup() {
     const statistic = ref();
     statistic.value = {};
+
     const getStatistic = () => {
       axios.get("/ebook-snapshot/get-statistic").then((response) => {
         const data = response.data;
@@ -128,8 +131,76 @@ export default defineComponent({
       });
     };
 
+    const init30DayEcharts = (list: any) => {
+      const myChart = echarts.init(document.getElementById('main'));
+      const xAxis = [];
+      const seriesView = [];
+      const seriesVote = [];
+
+      for (let i = 0; i < list.length; i++) {
+        const record = list[i];
+        xAxis.push(record.date);
+        seriesView.push(record.viewIncrease);
+        seriesVote.push(record.voteIncrease);
+      }
+
+      const option = {
+        title: {
+          text: '30天趋势图'
+        },
+        tooltip: {
+          trigger: 'axis'
+        },
+        legend: {
+          data: ['阅读量', '点赞量']
+        },
+        grid: {
+          left: '3%',
+          right: '4%',
+          bottom: '3%',
+          containLabel: true
+        },
+        toolbox: {
+          feature: {}
+        },
+        xAxis: {
+          type: 'category',
+          boundaryGap: false,
+          data: xAxis
+        },
+        yAxis: {
+          type: 'value'
+        },
+        series: [
+          {
+            name: '阅读量',
+            type: 'line',
+            smooth: true,
+            data: seriesView
+          },
+          {
+            name: '点赞量',
+            type: 'line',
+            smooth: true,
+            data: seriesVote
+          }
+        ]
+      }
+      myChart.setOption(option);
+    };
+
+    const get30DatStatistic = () => {
+      axios.get("/ebook-snapshot/get-30statistic").then((response) => {
+        const data = response.data;
+        if (data.success) {
+          init30DayEcharts(data.content);
+        }
+      })
+    };
+
     onMounted(() => {
       getStatistic();
+      get30DatStatistic();
     });
 
     return {
