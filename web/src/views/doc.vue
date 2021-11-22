@@ -200,4 +200,16 @@ export default defineComponent({
   text-align: center;
   padding: 15px;
 }
+
+/* 图片自适应 */
+.wangEditor img {
+  max-width: 100%;
+  height: auto;
+}
+
+/* 视频自适应 */
+.wangEditor iframe {
+  width: 100%;
+  height: 400px;
+}
 </style>
