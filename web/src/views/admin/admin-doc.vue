@@ -266,7 +266,7 @@ export default defineComponent({
         ebookId: route.query.ebookId
       };
 
-      docTreeSelectData.value = Tool.copy(docTree.value);
+      docTreeSelectData.value = Tool.copy(docTree.value) || [];
       //为树形选择增加'无'选项，用于新增一级节点
       docTreeSelectData.value.unshift({id: 0, name: '无'});
     };
@@ -293,7 +293,7 @@ export default defineComponent({
       editor.txt.html("");
       doc.value = Tool.copy(record);
       getContent();
-      docTreeSelectData.value = Tool.copy(docTree.value);
+      docTreeSelectData.value = Tool.copy(docTree.value) || [];
       setDisabled(docTreeSelectData.value, record.id);
       //为树形选择增加'无'选项，用于新增一级节点
       docTreeSelectData.value.unshift({id: 0, name: '无'});
@@ -315,7 +315,7 @@ export default defineComponent({
           docTree.value = [];
           docTree.value = Tool.array2Tree(docs.value, 0);
 
-          docTreeSelectData.value = Tool.copy(docTree.value);
+          docTreeSelectData.value = Tool.copy(docTree.value) || [];
           //为树形选择增加'无'选项，用于新增一级节点
           docTreeSelectData.value.unshift({id: 0, name: '无'});
         } else {
